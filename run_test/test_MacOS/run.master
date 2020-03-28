@@ -1,0 +1,88 @@
+run.stdin as
+run.stdin bc
+run.stdin cat
+run.stdin checknr
+run.stdin col
+run.stdin colcrt
+run.stdin colrm
+run.stdin cpp
+run.stdin dc
+run.stdin dd
+run.stdin declare
+run.stdin neqn
+run.stdin eqn
+run.stdin expand
+run.stdin flex
+run.stdin fmt
+run.stdin fold
+run.stdin grep a
+run.stdin grn
+run.stdin groff
+run.stdin head
+run.stdin indent -st
+run.stdin lex
+run.stdin m4
+run.stdin md5
+run.stdin more
+run.stdin mesg
+run.stdin nroff
+# run.stdin pbcopy
+# run.stdin pbpaste
+run.stdin pic
+run.stdin pr
+run.stdin refer
+run.stdin rev
+# run.stdin sed s/a/b/g
+run.stdin sh
+run.stdin soelim
+run.stdin sort
+run.stdin strings
+run.stdin sum
+run.stdin tail
+run.stdin tbl
+# run.stdin tee /tmp/tee.tmp
+run.stdin tr a b
+run.stdin troff -t
+run.stdin tsort
+run.stdin ul
+run.stdin uniq
+run.stdin units
+run.stdin wc
+run.file awk '{print}'
+run.file comm
+run.file cmp t12
+run.file cut -b 1245
+run.file sdiff
+run.file scplit
+run.file diff
+# run.file troff
+run.file expr
+run.file flex
+run.file join
+run.file look a
+run.file make -f
+run.file mdls
+run.file mig
+run.file nm
+run.file paste
+run.file strip
+run.file yacc
+run.file zic
+run.file zsh
+run.cp - calendar calendar
+run.cp t.c cc
+run.cp t.c gcc
+run.cp t compress
+run.cp t.f f77
+run.cp t.c lint
+run.cp t.p pc
+run.cp t split -10
+run.cp t.c ctags
+run.cp tags ptags
+run.cp tags ctree
+# run.stdin ex
+# run.stdin ed
+# run.stdin mail
+# run.stdin Mail
+run.stdin csh
+run.stdin xargs test

@@ -1,0 +1,7 @@
+run.pty htop
+run.pty vim
+run.pty telnet
+run.pty ex
+run.pty ftp
+run.pty csh
+run.pty zsh

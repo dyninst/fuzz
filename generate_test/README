@@ -1,0 +1,15 @@
+In this directory:
+	fuzz.c: 
+		modified random string generater
+		Some samples of how to run fuzz:
+			./fuzz 100 -0	
+			./fuzz 100 -0 -l	
+			./fuzz 1000 -a -o data
+	generate_small.py:
+		python script to generate small files(200 small files with 0-1e3 characters or 1-100 lines with 0-50 characters per line)
+	generate_medium.py:
+		python script to generate medium-size files(900 medium files with 0-1e5 lines with 1-255 characters per line, including the 12 test cases from the 1995 fuzzstudy)
+	generate_big.py:
+		python script to generate big files(180 big files with 1e6-1e7 characters or 1e4-1e5 lines with 0-1e5 characters per line)
+	generate_huge.py:
+		python script to generate huge files(60 huge files with 1e7-1e8 characters or 1e5-1e6 lines with 0-1e5 characters per line)

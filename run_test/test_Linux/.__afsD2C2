@@ -1,0 +1,95 @@
+run.stdin as [-a -D -L -R -v -W -Z -w -x]
+run.file awk '{print}'
+run.file awk '/a/ {print}'
+run.stdin bc [-l -w -s -q]
+run.file bison [-y -t --locations -l -k -v]
+run.file calendar [-a -b -w] -f 
+run.stdin cat [-a -b -e -n -s -t -T -u -v]
+run.cp t.c cc [-c -S -E]
+run.stdin col [-b -f -h -p -x]
+run.stdin colcrt [- -2]
+run.file colcrt - [-2]
+run.stdin colrm 
+run.file colrm 2 4 
+run.two_files comm [-1 -2 -3 -z --check-order --total]
+run.file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
+run.stdin csh
+#run.pty csh
+run.cp t.c ctags [-a -B -I --members -Q -R -u -v -x]
+run.file cut [--complement -s -z]
+run.stdin dc 
+run.stdin dd
+run.two_files diff [-q -s -c -u -e -n -y -W -p -F -t -T]
+run.file ed [-G -l -r -s -v]
+run.file eqn [-C -N -r -R]
+run.stdin ex 
+run.stdin expand [-i]
+run.file expand [-i]
+run.stdin expr
+run.cp t.f f77 [-c -g -W -dD -dI]
+run.stdin find [-P -L -H -D]
+run.stdin flex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
+run.file fmt [-c -s -t -u]
+run.file fold [-b -s]
+run.stdin ftp [-4 -6 -p -i -n -e -g -v -d]
+run.file gcc [-c -S -E -g]
+run.stdin gdb [-write -nh -nx -quiet -batch -fullname]
+run.stdin grep a [-E -i -v -w -x -y]
+run.file grep -c "ab" [-E -i -v -w -x -y]
+run.file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
+run.stdin head [-q -v -z]
+run.file head [-q -v -z]
+#run.pty htop
+run.two_files join [-e -i --check-order]
+run.stdin latex 
+run.stdin lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
+run.file lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
+run.file look a [-b -d -f]
+run.file m4 [-E -P -Q -s -g]
+run.file mail -s "subject" 15927119728@163.com < 
+run.file make -f 
+run.stdin more [-d -l -f -p -c -s -u]
+run.file neqn
+run.file nm [-A -B -D -g -l -n -P -r -s]
+run.file nroff [-C -h -c]
+run.stdin pic [-C -S -U -n -t -c -z -D]
+run.file pr [-c -d -f -J -m -r -t -v]
+run.stdin ptx [-A -F -R -f -r -t]
+run.file rev 
+run.stdin rev 
+run.two_files sdiff [-i -E -Z -b -W -B -a -l -s -t -d -H]
+run.file sed 's/a/b/' [-n --follow-symlinks --posix -s -u -z]
+run.stdin sh [-a -C -e -f -n -u -v -x -I -m -s -V -E -b -p]
+run.stdin soelim [-C -r -t]
+run.stdin sort [-b -d -f -g -i -M -h -r]
+run.file sort [-b -d -f -g -i -M -h -r]
+run.stdin spell [-l -n -o -v]
+run.file split [-d -x -e -l -u]
+run.cp t split -10 [-d -x -e -l -u]
+run.stdin strings [-a -d -f -w]
+run.file strings [-a -d -f -w]
+run.file strip [-F -s -g -S -d -M -p -D -U -w -x]
+run.stdin sum [-r -s]
+run.file sum [-r -s]
+run.stdin tail [-q -v -z]
+run.file tail [-q --retry -v -z]
+run.stdin tbl [-C]
+run.file tbl [-C]
+run.stdin tee /tmp/tee.tmp [-a -i -p]
+#run.stdin telnet [-4 -6 -8 -E -L -a -d -r]
+#run.pty telnet
+run.stdin tex [-file-line-error -no-file-line-error -file-line-error-style -ini -ipc -mltex -recorder -shell-escape -no-shell-escape -src-specials]
+run.stdin tr a b 
+run.file troff [-a -b -c -C -E -U -z]
+run.stdin tsort 
+run.file tsort
+run.stdin ul [-i]
+run.file ul [-i]
+run.stdin uniq [-c -d -i -u -z]
+run.file uniq [-c -d -i -u -z]
+#run.pty vim
+run.stdin wc [-c -m -l -w]
+run.file wc [-c -m -l -w]
+run.stdin xargs [-0 -r --show-limits -r]
+run.file yacc
+run.file zic [-v -s]
