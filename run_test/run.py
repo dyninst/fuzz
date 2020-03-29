@@ -12,43 +12,18 @@ import sys
 import random
 import getopt
 
-############
-# options
-# where are the test cases
-test_dir = "../NewTest_big"
-
-# the script will test all the files starting with a specified test_prefix
-test_prefix = "t"
-
-# if the cmd does not finish in timeout seconds, the test result will be considered as a hang
-timeout = 300
-
 # if there are hang_num successive hangs, no need to continue the testing on the current cmd
 # check the way you use the cmd, or increase the timeout and retest, or consider the results as hangs
 hang_num = 3
 
-# the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_Linux/run.master_options"
-
-# the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./results/linux_big"
-
-# the script will combine result files into single file named combine_filename
-combine_filename = "all"
-############
-
+# the script will test each cmd in configuration_file on the test cases in test_dir
+configuration_file = "./test_Linux/run.master_options"
 
 # redirect the output to /dev/null, otherwise the shell will be overwhelmed by outputs
 fnull = open(os.devnull, 'w')
 
 
-# get path of all test cases
-test_list = []
-test_list = os.listdir(test_dir)
-test_list = [file for file in test_list if file.startswith(test_prefix)]
-test_list = [os.path.join(test_dir, file) for file in test_list]
-
-
+# return a random subset of s, each element has 0.5 probability
 def random_subset(s):
   out = ""
   for el in s:
@@ -86,7 +61,10 @@ def run_file(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
-      print(final_cmd)
+
+      # print final_cmd to stdin
+      print("running: ", final_cmd)
+
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -134,7 +112,10 @@ def run_cp(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + file_tmp
-      print(final_cmd)
+
+      # print final_cmd to stdin
+      print("running: ", final_cmd)
+
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -181,7 +162,10 @@ def run_stdin(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
-      print(final_cmd)
+
+      # print final_cmd to stdin
+      print("running: ", final_cmd)
+
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -229,7 +213,10 @@ def run_double(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
-      print(final_cmd)
+
+      # print final_cmd to stdin
+      print("running: ", final_cmd)
+
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -248,13 +235,6 @@ def run_double(item, output, test_list, fnull, timeout):
 
 
 def run_pty(item, output, test_list, fnull, timeout):
-  # check if there is suffix
-  #idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  #if idx >= 0:
-  #  suffix = item[idx + 1: -1]
-  #  item = item[0: idx]
 
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
@@ -311,116 +291,142 @@ def run_pty(item, output, test_list, fnull, timeout):
 # the script start here
 # create dir for log
 
-test_dir = ''
-output_dir = ''
+if __name__ = "__main__":
 
-try:
-  opts, args = getopt.getopt(sys.argv[1:],"hi:o:",["ifile=","ofile="])
-except getopt.GetoptError:
-  print ("python run.py -i <inputfile> -o <outputfile>")
-  sys.exit(2)
-for opt, arg in opts:
-  if opt == '-h':
-    print ("python test.py -i <inputfile> -o <outputfile>")
-    sys.exit()
-  elif opt in ("-i", "--ifile"):
-    test_dir = arg
-  elif opt in ("-o", "--ofile"):
-    output_dir = arg
-print ("Input file is ", test_dir)
-print ("Output file is ", output_dir)
+	# options
 
-if not os.path.exists(output_dir):
-  os.mkdir(output_dir)
+	# where are the test cases
+	test_dir = "../NewTest_small"
 
-# open run.master and test every cmd
-with open(all_utilities_file, "r") as all_utilities_reader:
-  utilities = all_utilities_reader.readlines()
+	# the result will be saved in output_dir, each cmd corresponds to a result file 
+	output_dir = "./results/linux_small"
 
-  # process every line in all_utilities_file
-  for item in utilities:
-    item = item.strip()
-    cmd_type = item.split(" ", 1)[0]
-    print(item)
+	# the script will test all the files starting with a specified prefix. Prefix is empty string by default, 
+	# which means all the files in test_dir will be tested.
+	prefix = ""
 
-    if cmd_type == "run.stdin":
-      cmd = item.split(" ", 1)[1]
-      #print("h1")
-      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-        with open(file_name, "r") as f:
-          if f.readlines()[-1] == "finished\n":
-            continue
-      output_file = open(file_name, "w")
-      #print("h2")
-      output_file.write("start: %s\n" % item)
-      run_stdin(item, output_file, test_list, fnull, timeout)
-      output_file.write("finished\n")
-      output_file.close()
+	# if the cmd does not finish in timeout(300 by default) seconds, the test result will be considered as a hang
+	timeout = 300
 
-    elif cmd_type == "run.file":
-      cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-        with open(file_name, "r") as f:
-          if f.readlines()[-1] == "finished\n":
-            continue
-      output_file = open(file_name, "w")
-      output_file.write("start: %s\n" % item)
-      run_file(item, output_file, test_list, fnull, timeout)
-      output_file.write("finished\n")
-      output_file.close()
-    
-    elif cmd_type == "run.pty":
-      cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-        with open(file_name, "r") as f:
-          if f.readlines()[-1] == "finished\n":
-            continue
-      output_file = open(file_name, "w")
-      output_file.write("start: %s\n" % item)
-      run_pty(item, output_file, test_list, fnull, timeout)
-      output_file.write("finished\n")
-      output_file.close()
+	try:
+	  opts, args = getopt.getopt(sys.argv[1:],"hi:o:",["ifile=","ofile="])
+	except getopt.GetoptError:
+	  print("python3 run.py -i <inputfile> -o <outputfile>")
+	  sys.exit(2)
 
-    elif cmd_type == "run.cp":
-      cmd = item.split(" ", 2)[2]
-      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-        with open(file_name, "r") as f:
-          if f.readlines()[-1] == "finished\n":
-            continue
-      output_file = open(file_name, "w")
-      output_file.write("start: %s\n" % item)
-      run_cp(item, output_file, test_list, fnull, timeout)
-      output_file.write("finished\n")
-      output_file.close()
+	for opt, arg in opts:
+	  if opt == '-h':
+	    print("python3 test.py -i <inputfile> -o <outputfile>")
+	    sys.exit()
+	  elif opt in ("-i", "--ifile"):
+	    test_dir = arg
+	  elif opt in ("-o", "--ofile"):
+	    output_dir = arg
+	 	elif opt in ("-p", "--prefix"):
+	    prefix = arg
+	 	elif opt in ("-t", "--timeout"):
+	    timeout = int(arg)
 
-    elif cmd_type == "run.double":
-      cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-        with open(file_name, "r") as f:
-          if f.readlines()[-1] == "finished\n":
-            continue
-      output_file = open(file_name, "w")
-      output_file.write("start: %s\n" % item)
-      run_double(item, output_file, test_list, fnull, timeout)
-      output_file.write("finished\n")
-      output_file.close()
+	print("Input file is ", test_dir)
+	print("Output file is ", output_dir)
+	print("configuration file is ", configuration_file)
+	print("Prefix is ", test_prefix)
+	print("Timeout is ", timeout)
 
-  all_utilities_reader.close()
-  fnull.close()
+	# make directory to save output
+	if not os.path.exists(output_dir):
+	  os.makedirs(output_dir)
 
+	# get path of all test cases
+	test_list = []
+	test_list = os.listdir(test_dir)
+	test_list = [file for file in test_list if file.startswith(test_prefix)]
+	test_list = [os.path.join(test_dir, file) for file in test_list]
 
-# combine the result files
-with open(combine_filename, "w") as file_to_write:
-  dir = os.listdir(output_dir)
-  dir.sort()
-  for item in dir:
-    with open(os.path.join(output_dir, item), "r") as file_to_read:
-      file_to_write.write(file_to_read.read())
+	# open run.master and test every cmd
+	with open(configuration_file, "r") as configuration_reader:
+	  utilities = all_utilities_reader.readlines()
+
+	  # process every line in configuration_file
+	  for item in utilities:
+	  	print("start testing: ", item)
+
+	    item = item.strip()
+	    cmd_type = item.split(" ", 1)[0]
+	    
+
+	    # stdin
+	    if cmd_type == "stdin":
+	      cmd = item.split(" ", 1)[1]
+	      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+	      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+	        with open(file_name, "r") as f:
+	          if f.readlines()[-1] == "finished\n":
+	            continue
+	      output_file = open(file_name, "w")
+	      output_file.write("start: %s\n" % item)
+	      run_stdin(item, output_file, test_list, fnull, timeout)
+	      output_file.write("finished\n")
+	      output_file.close()
+
+	    # file
+	    elif cmd_type == "file":
+	      cmd = item.split(" ", 1)[1]
+	      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+	      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+	        with open(file_name, "r") as f:
+	          if f.readlines()[-1] == "finished\n":
+	            continue
+	      output_file = open(file_name, "w")
+	      output_file.write("start: %s\n" % item)
+	      run_file(item, output_file, test_list, fnull, timeout)
+	      output_file.write("finished\n")
+	      output_file.close()
+	    
+	    # pty
+	    elif cmd_type == "pty":
+	      cmd = item.split(" ", 1)[1]
+	      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+	      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+	        with open(file_name, "r") as f:
+	          if f.readlines()[-1] == "finished\n":
+	            continue
+	      output_file = open(file_name, "w")
+	      output_file.write("start: %s\n" % item)
+	      run_pty(item, output_file, test_list, fnull, timeout)
+	      output_file.write("finished\n")
+	      output_file.close()
+
+	    # cp
+	    elif cmd_type == "cp":
+	      cmd = item.split(" ", 2)[2]
+	      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+	      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+	        with open(file_name, "r") as f:
+	          if f.readlines()[-1] == "finished\n":
+	            continue
+	      output_file = open(file_name, "w")
+	      output_file.write("start: %s\n" % item)
+	      run_cp(item, output_file, test_list, fnull, timeout)
+	      output_file.write("finished\n")
+	      output_file.close()
+
+	    # double
+	    elif cmd_type == "double":
+	      cmd = item.split(" ", 1)[1]
+	      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+	      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+	        with open(file_name, "r") as f:
+	          if f.readlines()[-1] == "finished\n":
+	            continue
+	      output_file = open(file_name, "w")
+	      output_file.write("start: %s\n" % item)
+	      run_double(item, output_file, test_list, fnull, timeout)
+	      output_file.write("finished\n")
+	      output_file.close()
+
+	fnull.close()
+
 
 
 
