@@ -1,83 +1,83 @@
-run.stdin gdb
-run.stdin as 
-run.stdin bc 
-run.stdin cat 
-run.stdin col 
-run.stdin colcrt 
-run.stdin colrm 
-run.stdin dc 
-run.stdin expand 
-run.stdin ftp 
-run.stdin find 
-run.stdin grep a 
-run.stdin head 
-run.stdin latex 
-run.stdin lex 
-run.stdin more 
-run.stdin pic 
-run.stdin ptx 
-run.stdin rev 
-run.stdin sh 
-run.stdin soelim 
-run.stdin sort 
-run.stdin spell 
-run.stdin strings 
-run.stdin sum 
-run.stdin tail 
-run.stdin tbl 
-run.stdin tee /tmp/tee.tmp 
-run.stdin telnet 
-run.stdin tex 
-run.stdin tr a b 
-run.stdin tsort 
-run.stdin ul 
-run.stdin uniq 
-run.stdin wc 
-run.file awk '{print}' 
-run.file awk '/a/ {print}' 
-run.file colcrt - 
-run.file comm t12 
-run.file colrm 2 4 
-run.file cpp 
-run.file diff t12 
-run.file expand 
-run.file fmt 
-run.file fold 
-run.file grep -c "ab" 
-run.file head 
-run.file join t12 
-run.file lex 
-run.file look a 
-run.file mail -s "subject" 15927119728@163.com < 
-run.file make -f 
-run.file m4 
-run.file nm 
-run.file nroff 
-run.file pr 
-run.file rev 
-run.file sed 's/a/b/' 
-run.file sort 
-run.file split 
-run.file strings 
-run.file strip 
-run.file sum 
-run.file tail 
-run.file tbl 
-run.file troff 
-run.file tsort 
-run.file ul 
-run.file uniq 
-run.file wc 
-run.file yacc 
-run.cp - calendar calendar 
-run.cp t.c cc 
-run.cp t.f f77 
-run.cp t split -10 
-run.cp t.c ctags 
-run.stdin ex 
-run.stdin csh 
-run.double diff 
-run.double join 
-run.double comm 
-run.pty vim
-run.pty htop
+stdin gdb
+stdin as 
+stdin bc 
+stdin cat 
+stdin col 
+stdin colcrt 
+stdin colrm 
+stdin dc 
+stdin expand 
+stdin ftp 
+stdin find 
+stdin grep a 
+stdin head 
+stdin latex 
+stdin lex 
+stdin more 
+stdin pic 
+stdin ptx 
+stdin rev 
+stdin sh 
+stdin soelim 
+stdin sort 
+stdin spell 
+stdin strings 
+stdin sum 
+stdin tail 
+stdin tbl 
+stdin tee /tmp/tee.tmp 
+stdin telnet 
+stdin tex 
+stdin tr a b 
+stdin tsort 
+stdin ul 
+stdin uniq 
+stdin wc 
+file awk '{print}' 
+file awk '/a/ {print}' 
+file colcrt - 
+file comm t12 
+file colrm 2 4 
+file cpp 
+file diff t12 
+file expand 
+file fmt 
+file fold 
+file grep -c "ab" 
+file head 
+file join t12 
+file lex 
+file look a 
+file mail -s "subject" 15927119728@163.com < 
+file make -f 
+file m4 
+file nm 
+file nroff 
+file pr 
+file rev 
+file sed 's/a/b/' 
+file sort 
+file split 
+file strings 
+file strip 
+file sum 
+file tail 
+file tbl 
+file troff 
+file tsort 
+file ul 
+file uniq 
+file wc 
+file yacc 
+cp - calendar calendar 
+cp t.c cc 
+cp t.f f77 
+cp t split -10 
+cp t.c ctags 
+stdin ex 
+stdin csh 
+double diff 
+double join 
+double comm 
+pty vim
+pty htop
