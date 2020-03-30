@@ -11,7 +11,7 @@ two_files cmp [-b -l -s]
 stdin col [-b -f -h -p -x]
 file colcrt [- -2]
 stdin colrm 6
-double comm [-1 -2 -3 -i]
+two_files comm [-1 -2 -3 -i]
 file compress [-c -f]
 file cpp [-b -c -d -e -f -F]
 stdin csh 
@@ -35,7 +35,7 @@ stdin grn [-C -s]
 file groff [-e -l -N -p]
 file head 
 file indent [-bacc -br -lp -st -troff]
-double join
+two_files join
 file look a [-d -f]
 stdin m4 [-E -P -Q -s -G]
 file make [-B -d -e -i -k -L -n -p -q -r -R -s -S] -f

@@ -1,83 +1,90 @@
-stdin gdb
-stdin as 
-stdin bc 
-stdin cat 
-stdin col 
-stdin colcrt 
+stdin as
+file awk '{print}'
+file awk '/a/ {print}'
+stdin bc
+file bison
+file calendar -f 
+stdin cat
+cp t.c cc
+stdin col
+stdin colcrt
+file colcrt - 
 stdin colrm 
+file colrm 2 4 
+two_files comm
+file cpp 
+stdin csh
+cp t.c ctags 
+file cut 
 stdin dc 
+stdin dd
+two_files diff 
+file ed 
+file eqn 
+stdin ex 
 stdin expand 
-stdin ftp 
+file expand 
+stdin expr
+cp t.f f77 
 stdin find 
+stdin flex 
+file fmt 
+file fold
+stdin ftp 
+file gcc 
+stdin gdb 
 stdin grep a 
+file grep -c "ab" 
+file groff 
 stdin head 
+file head 
+two_files join 
 stdin latex 
 stdin lex 
-stdin more 
+file lex 
+file look a 
+file m4 
+file mail -s "subject" 15927119728@163.com < 
+file make -f 
+stdin more
+file neqn
+file nm 
+file nroff 
 stdin pic 
+file pr 
 stdin ptx 
+file rev 
 stdin rev 
+two_files sdiff 
+file sed 's/a/b/' 
 stdin sh 
 stdin soelim 
 stdin sort 
-stdin spell 
-stdin strings 
-stdin sum 
-stdin tail 
-stdin tbl 
-stdin tee /tmp/tee.tmp 
-stdin telnet 
-stdin tex 
-stdin tr a b 
-stdin tsort 
-stdin ul 
-stdin uniq 
-stdin wc 
-file awk '{print}' 
-file awk '/a/ {print}' 
-file colcrt - 
-file comm t12 
-file colrm 2 4 
-file cpp 
-file diff t12 
-file expand 
-file fmt 
-file fold 
-file grep -c "ab" 
-file head 
-file join t12 
-file lex 
-file look a 
-file mail -s "subject" 15927119728@163.com < 
-file make -f 
-file m4 
-file nm 
-file nroff 
-file pr 
-file rev 
-file sed 's/a/b/' 
 file sort 
+stdin spell 
 file split 
+cp t split -10 
+stdin strings 
 file strings 
 file strip 
+stdin sum 
 file sum 
+stdin tail 
 file tail 
+stdin tbl 
 file tbl 
+stdin tee /tmp/tee.tmp 
+stdin tex 
+stdin tr a b 
 file troff 
-file tsort 
+stdin tsort 
+file tsort
+stdin ul 
 file ul 
+stdin uniq 
 file uniq 
+stdin wc 
 file wc 
-file yacc 
-cp - calendar calendar 
-cp t.c cc 
-cp t.f f77 
-cp t split -10 
-cp t.c ctags 
-stdin ex 
-stdin csh 
-double diff 
-double join 
-double comm 
-pty vim
-pty htop
+stdin xargs 
+file yacc
+file zic 

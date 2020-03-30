@@ -1,88 +1,81 @@
+file as
 stdin as
-stdin bc
-stdin cat
-stdin checknr
-stdin col
-stdin colcrt
-stdin colrm
-stdin cpp
-stdin dc
-stdin dd
-stdin declare
-stdin neqn
-stdin eqn
-stdin expand
-stdin flex
-stdin fmt
-stdin fold
-stdin grep a
-stdin grn
-stdin groff
-stdin head
-stdin indent -st
-stdin lex
-stdin m4
-stdin md5
-stdin more
-stdin mesg
-stdin nroff
-# stdin pbcopy
-# stdin pbpaste
-stdin pic
-stdin pr
-stdin refer
-stdin rev
-# stdin sed s/a/b/g
-stdin sh
-stdin soelim
-stdin sort
-stdin strings
-stdin sum
-stdin tail
-stdin tbl
-# stdin tee /tmp/tee.tmp
-stdin tr a b
-stdin troff -t
-stdin tsort
-stdin ul
-stdin uniq
-stdin units
-stdin wc
 file awk '{print}'
-file comm
-file cmp t12
-file cut -b 1245
-file sdiff
-file scplit
-file diff
-# file troff
-file expr
-file flex
-file join
+stdin bc
+file bison
+file calendar -f
+file cat
+cp t.c cc
+file checknr
+two_files cmp
+stdin col
+file colcrt
+stdin colrm 6
+two_files comm
+file compress
+file cpp
+stdin csh 
+file ctags
+file cut
+stdin dc 
+stdin dd 
+two_files diff
+stdin ed
+stdin eqn
+stdin ex
+stdin expand
+stdin expr
+file find
+file fmt
+file fold
+file gcc
+stdin lldb
+file grep "e" -f
+stdin grn
+file groff
+file head 
+file indent
+two_files join
 file look a
-file make -f
+stdin m4
+file make
+stdin md5
 file mdls
 file mig
+stdin neqn
 file nm
-file paste
+file nroff
+file pic
+file pr
+file refer
+file rev
+two_files sdiff
+stdin sed
+stdin sh
+file soelim
+file sort
+file split
+file strings
 file strip
+file sum
+file tail
+file tbl
+stdin tee
+stdin tr a b
+file troff
+file tsort
+file ul
+two_files uniq
+file units -f
+file wc
+stdin xargs
 file yacc
 file zic
-file zsh
-cp - calendar calendar
-cp t.c cc
-cp t.c gcc
-cp t compress
-cp t.f f77
-cp t.c lint
-cp t.p pc
-cp t split -10
-cp t.c ctags
-cp tags ptags
-cp tags ctree
-# stdin ex
-# stdin ed
-# stdin mail
-# stdin Mail
-stdin csh
-stdin xargs test
+stdin zsh
+pty htop
+pty vim
+pty telnet
+pty ex
+pty ftp
+pty csh
+pty zsh
