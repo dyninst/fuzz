@@ -1,31 +1,28 @@
 stdin as [-a -D -L -R -v -W -Z -w -x]
 file awk '{print}'
 stdin bc [-l -w -s -q]
-file bison [-y -t --locations -l -k -v]
+file bison [-y -t --locations -l -k -d -v]
 file calendar [-a -b -w] -f 
-stdin cat [-a -b -e -n -s -t -T -u -v]
+stdin cat [-A -b -e -n -s -t -T -v]
 cp t.c cc [-c -S -E]
 stdin col [-b -f -h -p -x]
-stdin colcrt [- -2]
-file colcrt - [-2]
-stdin colrm 
+file colcrt [- -2]
 file colrm 2 4 
 two_files comm [-1 -2 -3 -z --check-order --total]
 file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
 stdin csh
-cp t.c ctags [-a -B -I --members -Q -R -u -v -x]
-file cut [--complement -s -z]
+cp t.c ctags [-a -B --globals -I --members --no-members -Q -R -u -v -x]
+file cut [--complement -s -z] -b 1
 stdin dc 
-stdin dd
-two_files diff [-q -s -c -u -e -n -y -W -p -F -t -T]
-file ed [-G -l -r -s -v]
+stdin dd 
+two_files diff [--normal -q -s -e -n -y --left-column --suppress-common-lines -p -F -t -T --suppress-blank-empty]
+stdin ed [-G -l -r -s -v]
 file eqn [-C -N -r -R]
 stdin ex 
-stdin expand [-i]
 file expand [-i]
 stdin expr
 cp t.f f77 [-c -g -W -dD -dI]
-stdin find [-P -L -H -D]
+stdin find [-P -L -H]
 stdin flex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
 file fmt [-c -s -t -u]
 file fold [-b -s]
@@ -33,8 +30,7 @@ stdin ftp [-4 -6 -p -i -n -e -g -v -d]
 file gcc [-c -S -E -g]
 stdin gdb [-write -nh -nx -quiet -batch -fullname]
 stdin grep a [-E -i -v -w -x -y]
-file grep -c "ab" [-E -i -v -w -x -y]
-file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
+file groff [-e -k -l -N -p -s -S -t -U -z -Z -a -b -c -C -E]
 stdin head [-q -v -z]
 two_files join [-e -i --check-order]
 stdin latex 
