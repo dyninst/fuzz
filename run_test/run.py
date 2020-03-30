@@ -330,6 +330,7 @@ if __name__ == "__main__":
       print(arg)
       timeout = int(arg)
 
+  # print out the parameters
   print("Input file is ", test_dir)
   print("Output file is ", output_dir)
   print("configuration file is ", configuration_file)
@@ -361,8 +362,12 @@ if __name__ == "__main__":
       # stdin
       if cmd_type == "stdin":
         cmd = item.split(" ", 1)[1]
-        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        cmd_name = item.split(" ", 2)[1]
+        # the filename to be saved as
+        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name):
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -375,8 +380,12 @@ if __name__ == "__main__":
       # file
       elif cmd_type == "file":
         cmd = item.split(" ", 1)[1]
-        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        cmd_name = item.split(" ", 2)[1]
+        # the filename to be saved as
+        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name):
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -389,8 +398,12 @@ if __name__ == "__main__":
       # pty
       elif cmd_type == "pty":
         cmd = item.split(" ", 1)[1]
-        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        cmd_name = item.split(" ", 2)[1]
+        # the filename to be saved as
+        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name):
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -403,8 +416,12 @@ if __name__ == "__main__":
       # cp
       elif cmd_type == "cp":
         cmd = item.split(" ", 2)[2]
-        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        cmd_name = item.split(" ", 3)[2]
+        # the filename to be saved as
+        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name):
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -417,8 +434,12 @@ if __name__ == "__main__":
       # two_files
       elif cmd_type == "two_files":
         cmd = item.split(" ", 1)[1]
-        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        cmd_name = item.split(" ", 2)[1]
+        # the filename to be saved as
+        file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name):
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
