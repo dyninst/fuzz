@@ -12,6 +12,7 @@ stdin col [-b -f -h -p -x]
 stdin colcrt [- -2]
 stdin colrm
 two_files comm
+cp t compress [-c -f -v]
 stdin cpp [-E -S -c -ansi -ObjC -fblocks -g -ftrapv]
 stdin csh [-b -c -d -e -f -F -i -l -m -n -q -s -t]
 cp t.c ctags [-B -F -T -a -d -f -u -v -w -x]
@@ -79,5 +80,3 @@ stdin xargs [-0 -r -x]
 stdin xargs test
 file yacc [-B -d -g -i -L -P -r -s -t -v]
 file zic [-D -v -s]
-file compress [-c -v]
-cp t compress [-c -f -v]

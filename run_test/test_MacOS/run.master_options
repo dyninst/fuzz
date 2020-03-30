@@ -11,7 +11,7 @@ stdin col [-b -f -h -p -x]
 file colcrt [- -2]
 stdin colrm 6
 two_files comm [-1 -2 -3 -i]
-file compress [-c -f]
+cp t compress [-c -f -v]
 file cpp [-b -c -d -e -f -F]
 stdin csh 
 file ctags [-B -F -a -d -t -u -w -x]
