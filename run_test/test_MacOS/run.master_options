@@ -1,5 +1,4 @@
-file as [-dynamic -static -n -f -g -W -L -q]
-stdin as [-dynamic -static -n -f -g -W -L -q]
+cp a.out as [-dynamic -static -n -f -g -W -L -q]
 file awk '{print}'
 stdin bc [-l -w -s -q]
 file bison [-d -g -k -l --no-lines -n --no-parser --token-table -t -y] 

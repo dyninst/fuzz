@@ -1,6 +1,5 @@
 stdin as
 file awk '{print}'
-file awk '/a/ {print}'
 stdin bc
 file bison
 file calendar -f 
@@ -37,10 +36,8 @@ stdin grep a
 file grep -c "ab" 
 file groff 
 stdin head 
-file head 
 two_files join 
 stdin latex 
-stdin lex 
 file lex 
 file look a 
 file m4 
@@ -53,8 +50,7 @@ file nroff
 stdin pic 
 file pr 
 stdin ptx 
-file rev 
-stdin rev 
+file rev  
 two_files sdiff 
 file sed 's/a/b/' 
 stdin sh 
@@ -63,27 +59,18 @@ stdin sort
 file sort 
 stdin spell 
 file split 
-cp t split -10 
-stdin strings 
 file strings 
 file strip 
 stdin sum 
-file sum 
-stdin tail 
 file tail 
 stdin tbl 
-file tbl 
 stdin tee /tmp/tee.tmp 
 stdin tex 
 stdin tr a b 
 file troff 
-stdin tsort 
 file tsort
 stdin ul 
-file ul 
 stdin uniq 
-file uniq 
-stdin wc 
 file wc 
 stdin xargs 
 file yacc

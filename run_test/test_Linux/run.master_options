@@ -1,6 +1,5 @@
 stdin as [-a -D -L -R -v -W -Z -w -x]
 file awk '{print}'
-file awk '/a/ {print}'
 stdin bc [-l -w -s -q]
 file bison [-y -t --locations -l -k -v]
 file calendar [-a -b -w] -f 
@@ -37,10 +36,8 @@ stdin grep a [-E -i -v -w -x -y]
 file grep -c "ab" [-E -i -v -w -x -y]
 file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
 stdin head [-q -v -z]
-file head [-q -v -z]
 two_files join [-e -i --check-order]
 stdin latex 
-stdin lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
 file lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
 file look a [-b -d -f]
 file m4 [-E -P -Q -s -g]
@@ -54,7 +51,6 @@ stdin pic [-C -S -U -n -t -c -z -D]
 file pr [-c -d -f -J -m -r -t -v]
 stdin ptx [-A -F -R -f -r -t]
 file rev 
-stdin rev 
 two_files sdiff [-i -E -Z -b -W -B -a -l -s -t -d -H]
 file sed 's/a/b/' [-n --follow-symlinks --posix -s -u -z]
 stdin sh [-a -C -e -f -n -u -v -x -I -m -s -V -E -b -p]
@@ -62,29 +58,20 @@ stdin soelim [-C -r -t]
 stdin sort [-b -d -f -g -i -M -h -r]
 file sort [-b -d -f -g -i -M -h -r]
 stdin spell [-l -n -o -v]
-file split [-d -x -e -l -u]
-cp t split -10 [-d -x -e -l -u]
-stdin strings [-a -d -f -w]
+file split [-d -x -e -u]
 file strings [-a -d -f -w]
 file strip [-F -s -g -S -d -M -p -D -U -w -x]
 stdin sum [-r -s]
-file sum [-r -s]
-stdin tail [-q -v -z]
 file tail [-q --retry -v -z]
 stdin tbl [-C]
-file tbl [-C]
 stdin tee /tmp/tee.tmp [-a -i -p]
 stdin tex [-file-line-error -no-file-line-error -file-line-error-style -ini -ipc -mltex -recorder -shell-escape -no-shell-escape -src-specials]
 stdin tr a b 
 file troff [-a -b -c -C -E -U -z]
-stdin tsort 
 file tsort
 stdin ul [-i]
-file ul [-i]
 stdin uniq [-c -d -i -u -z]
-file uniq [-c -d -i -u -z]
-stdin wc [-c -m -l -w]
-file wc [-c -m -l -w]
+file wc [-c -m -l -L -w]
 stdin xargs [-0 -r --show-limits -r]
 file yacc
 file zic [-v -s]
