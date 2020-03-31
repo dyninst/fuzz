@@ -96,10 +96,10 @@ def test_cp(item, output, test_list, fnull, timeout):
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = final_cmd + " " + options_random
-      final_cmd = final_cmd + " " + file_tmp + " " + test_case
+      final_cmd = final_cmd + " " + file_tmp 
 
       # print final_cmd to stdin
-      print("running: ", final_cmd)
+      print("running: %s using case %s" % (final_cmd, test_case))
 
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
       # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
@@ -214,7 +214,7 @@ def test_pty(item, output, test_list, fnull, timeout):
 
   for test_case in test_list:
     try:
-      final_cmd = "../src/pty_cross_platform -d 0.001 " + cmd
+      final_cmd = "../src/ptyjig -d 0.001 " + cmd
       subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
       # remove all ^z in tmp
       fr = open("tmp", "rb")
