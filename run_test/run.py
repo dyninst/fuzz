@@ -284,7 +284,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -302,7 +302,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -320,7 +320,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -338,7 +338,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -356,7 +356,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
