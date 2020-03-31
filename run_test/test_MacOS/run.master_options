@@ -1,4 +1,4 @@
-cp a.out as [-dynamic -static -n -f -g -W -L -q]
+cp a.out as
 file awk '{print}'
 stdin bc [-l -w -s -q]
 file bison [-d -g -k -l --no-lines -n --no-parser --token-table -t -y] 
@@ -27,7 +27,7 @@ stdin expr
 file find [-H -E -X -d -s -x]
 file fmt [-c -m -n -p -s]
 file fold [-b -s]
-file gcc
+cp t.c gcc
 stdin lldb [-d -e -x -w]
 file grep "e" -f
 stdin grn [-C -s]
@@ -37,7 +37,7 @@ file indent [-bacc -br -lp -st -troff]
 two_files join
 file look a [-d -f]
 stdin m4 [-E -P -Q -s -G]
-file make [-B -d -e -i -k -L -n -p -q -r -R -s -S] -f
+file make -f
 stdin md5 [-p -q -r -t -x]
 file mdls [-name -raw -nullMarker]
 file mig [-v -L -K -s -MD]
@@ -57,14 +57,14 @@ file split
 file strings [- -a -o]
 file strip [-u -r -i -A -n -S -X -T -N -x -]
 file sum
-file tail [-f -F -q -r]
+file tail
 file tbl [-C]
 stdin tee [-a -i]
 stdin tr a b
 file troff [-a -b -c -C -E -U] 
 file tsort [-l -q]
 file ul [-i]
-two_files uniq [-d -i]
+file uniq [-d -i]
 file units [-q] -f
 file wc [-c -l -m -w]
 stdin xargs [-0 -p -d -x]
