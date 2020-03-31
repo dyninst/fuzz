@@ -32,15 +32,6 @@ def random_subset(s):
 
 # run cmds with input from file
 def test_file(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -48,10 +39,6 @@ def test_file(item, output, test_list, fnull, timeout):
   for test_case in test_list:
     try:
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
 
       # print final_cmd to stdin
@@ -74,15 +61,6 @@ def test_file(item, output, test_list, fnull, timeout):
 
 # run cmds with input from file with specified extension name
 def test_cp(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", index_num)[0]
   file_tmp = item.split(" ", index_num)[1]
   cmd = item.split(" ", index_num)[index_num]
@@ -92,10 +70,6 @@ def test_cp(item, output, test_list, fnull, timeout):
     try:
       subprocess.call(["cp %s %s" % (test_case, file_tmp)], shell=True)
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + file_tmp 
 
       # print final_cmd to stdin
@@ -120,15 +94,6 @@ def test_cp(item, output, test_list, fnull, timeout):
 
 # run cmds with input from stdin
 def test_stdin(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -136,10 +101,6 @@ def test_stdin(item, output, test_list, fnull, timeout):
   for test_case in test_list:
     try:
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
 
       # print final_cmd to stdin
@@ -162,15 +123,6 @@ def test_stdin(item, output, test_list, fnull, timeout):
 
 # run cmds with two input files
 def test_two_files(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -181,10 +133,6 @@ def test_two_files(item, output, test_list, fnull, timeout):
       test_case2 = random.choice(test_list)
 
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
 
       # print final_cmd to stdin
@@ -233,7 +181,7 @@ def test_pty(item, output, test_list, fnull, timeout):
       final_cmd = final_cmd + " < " + "tmp"
 
       # print final_cmd to stdin
-      print("running: ", final_cmd)
+      print("running: %s using case %s " % (final_cmd, test_case))
 
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
       # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
