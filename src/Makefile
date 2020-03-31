@@ -1,10 +1,10 @@
-all: fuzz pty_cross_platform
+all: fuzz ptyjig
 
 fuzz: fuzz.c
 	gcc fuzz.c -o fuzz
 
-pty_cross_platform: pty_cross_platform.c
-	gcc pty_cross_platform.c -o pty_cross_platform
+ptyjig: ptyjig.c
+	gcc ptyjig.c -o ptyjig
 
 clean:
-	rm ./fuzz ./pty_cross_platform
+	rm ./fuzz ./ptyjig

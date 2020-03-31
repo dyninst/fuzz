@@ -194,6 +194,7 @@ void usage()
 {
      puts("Usage: fuzz [-x] [-0] [-a] [-l [strlen]] [-p] [-o outfile]");
      puts("            [-r infile] [-d delay] [-s seed] [-e \"epilog\"] [len]");
+     exit(1);
 }
 
 
