@@ -1,0 +1,10 @@
+This directory contains manual pages for fuzz and ptyjig. fuzz.1 
+and ptyjig.1 are pre-processed (used cat or more to view)  man pages.
+To print the manual to printer, use the following troff command:
+
+	ditroff -man -Pprinter *.man
+
+The file "tech.report" has a postscript file (suitable for an laserwriter
+or such) of the paper describing the system.  It also contains test results
+from the systems that we've currently tested.
+

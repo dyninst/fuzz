@@ -1,0 +1,68 @@
+.\" Copyright (c) 1989 Lars Fredriksen, Bryan So and Barton Miller
+.\" All rights reserved.  
+.\"
+.\"	@(#)fuzz.1
+.\"
+.TH FUZZ 1 "December 1, 1988"
+.UC 4
+.SH NAME
+fuzz \- random character generator
+.SH SYNOPSIS
+.B fuzz
+length [ option ] ...
+.SH DESCRIPTION
+The main purpose of \fIfuzz\fP is to test the robustness of system
+utilities. We use \fIfuzz\fP
+to generate random characters. These are then piped to a
+system utility (using \fIptyjig(1)\fP if necessary.) 
+If the utility crashes, the saved 
+input and output streams can then be analyzed to decide what sorts 
+of input cause problems.
+.PP
+.I Length
+is taken to be the
+length of the output stream, usually in bytes, 
+When \fB\-l\fP is selected it
+the length is in number of strings.
+.PP
+The following options can be specified.
+.TP
+.B \-0
+Include NULL (ASCII 0) characters
+.TP
+.B \-a
+Include all ASCII characters except NULL (default)
+.TP
+.BI \-d " delay"
+Specify a delay in seconds between each character.
+.TP
+.BI \-e " string"
+Send \fIstring\fP after all the characters. This feature can be used
+to send termination strings to the test programs. Standard C escape
+sequences can be used.
+.TP
+.BI \-l " [len]"
+Generate random length strings. 
+If \fIlen\fP is specified, it is taken to be the 
+maximum length of each string (default = 255).
+Strings are terminated with the ASCII newline character.
+.TP
+.BI \-o " file"
+Store the output stream to \fIfile\fP as well as sending them to
+\fIstdout\fP.
+.TP
+.B \-p
+Generate printable ASCII characters only
+.TP
+.BI \-r " file"
+Replay characters stored in \fIfile\fP.
+.TP
+.BI \-s " seed"
+Use \fIseed\fP as the seed to the random number generator.
+.TP
+.B \-x 
+Print the seed as the first line of stdout.
+.SH AUTHORS
+Lars Fredriksen, Bryan So.
+.SH "SEE ALSO"
+ptyjig(1)

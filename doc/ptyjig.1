@@ -1,0 +1,132 @@
+
+
+
+PTYJIG(1)                USER COMMANDS                  PTYJIG(1)
+
+
+
+NAME
+     ptyjig - pseudo-terminal pipe
+
+SYNOPSIS
+     ptyjig [ option ] ...  command [ args ] ...
+
+DESCRIPTION
+     _P_t_y_j_i_g executes the Unix _c_o_m_m_a_n_d with _a_r_g_s as its  arguments
+     if  supplied.  The standard input of ptyjig is piped to _c_o_m_-
+     _m_a_n_d as if typed at a terminal.  Ptyjig is  expected  to  be
+     used  with _f_u_z_z(_1) to test interactive (terminal based) pro-
+     grams. If the test program is stopped by a Control-Z, it  is
+     resumed immediately.
+
+     The following options can be specified.
+
+     -e   Do not send EOF character after _s_t_d_i_n has exhausted.
+
+     -s   Do not  process  interrupt  signals,  such  as  SIGINT,
+          SIGQUIT and SIGSTOP.
+
+     -x   Do not write output from _c_o_m_m_a_n_d to _s_t_d_o_u_t.
+
+     -i _f_i_l_e
+          Save the input stream sent to _c_o_m_m_a_n_d into _f_i_l_e.
+
+     -o _f_i_l_e
+          Save the output produced by _c_o_m_m_a_n_d into _f_i_l_e.
+
+     -d _d_e_l_a_y
+          Wait _d_e_l_a_y seconds after sending each character.
+
+     -t _i_n_t_e_r_v_a_l
+          If input has exhausted but _c_o_m_m_a_n_d has  neither  exited
+          nor  sent  any  output,  exit  after  _i_n_t_e_r_v_a_l seconds.
+          Default is 2.0 seconds.
+
+     _D_e_l_a_y and _i_n_t_e_r_v_a_l can have fractions.
+
+EXAMPLE
+     ptyjig -o out -d 0.2 -t 10 vi text1 <text2
+
+     Runs "vi text1" in  background,  typing  the  characters  in
+     _t_e_x_t_2 into it with a delay of 0.2sec between characters, and
+     save the output to _o_u_t. The program stops when _v_i stops out-
+     putting for 10 seconds.
+
+AUTHORS
+     Lars Fredriksen, Bryan So.
+
+FILES
+     /dev/tty*
+
+
+
+Sun Release 4.0   Last change: December 1, 1988                 1
+
+
+
+
+
+
+PTYJIG(1)                USER COMMANDS                  PTYJIG(1)
+
+
+
+     /dev/pty*
+
+SEE ALSO
+     fuzz(1), sigvec(2), pty(4), tty(4)
+
+BUGS
+     The trace files specified by -i and -o options  may  contain
+     more  than  actual characters sent to and received from _c_o_m_-
+     _m_a_n_d. This is due to the fact that after _c_o_m_m_a_n_d  exits  and
+     before _p_t_y_j_i_g is signaled, some characters may be sent. This
+     can be prevented by  setting  -d  option  to  some  suitable
+     delay.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sun Release 4.0   Last change: December 1, 1988                 2
+
+
+

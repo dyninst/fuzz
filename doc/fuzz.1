@@ -1,0 +1,132 @@
+
+
+
+FUZZ(1)                  USER COMMANDS                    FUZZ(1)
+
+
+
+NAME
+     fuzz - random character generator
+
+SYNOPSIS
+     fuzz length [ option ] ...
+
+DESCRIPTION
+     The main purpose of _f_u_z_z is to test the robustness of system
+     utilities.  We use _f_u_z_z to generate random characters. These
+     are then piped to  a  system  utility  (using  _p_t_y_j_i_g(_1)  if
+     necessary.) If the utility crashes, the saved input and out-
+     put streams can then be analyzed to  decide  what  sorts  of
+     input cause problems.
+
+     _L_e_n_g_t_h is taken to be the length of the output stream,  usu-
+     ally  in  bytes,  When  -l  is  selected it the length is in
+     number of strings.
+
+     The following options can be specified.
+
+     -0   Include NULL (ASCII 0) characters
+
+     -a   Include all ASCII characters except NULL (default)
+
+     -d _d_e_l_a_y
+          Specify a delay in seconds between each character.
+
+     -e _s_t_r_i_n_g
+          Send _s_t_r_i_n_g after all the characters. This feature  can
+          be  used  to  send termination strings to the test pro-
+          grams. Standard C escape sequences can be used.
+
+     -l [_l_e_n]
+          Generate random length strings. If _l_e_n is specified, it
+          is  taken  to  be  the  maximum  length  of each string
+          (default = 255).  Strings are terminated with the ASCII
+          newline character.
+
+     -o _f_i_l_e
+          Store the output stream to _f_i_l_e as well as sending them
+          to _s_t_d_o_u_t.
+
+     -p   Generate printable ASCII characters only
+
+     -r _f_i_l_e
+          Replay characters stored in _f_i_l_e.
+
+     -s _s_e_e_d
+          Use _s_e_e_d as the seed to the random number generator.
+
+     -x   Print the seed as the first line of stdout.
+
+
+
+
+Sun Release 4.0   Last change: December 1, 1988                 1
+
+
+
+
+
+
+FUZZ(1)                  USER COMMANDS                    FUZZ(1)
+
+
+
+AUTHORS
+     Lars Fredriksen, Bryan So.
+
+SEE ALSO
+     ptyjig(1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sun Release 4.0   Last change: December 1, 1988                 2
+
+
+

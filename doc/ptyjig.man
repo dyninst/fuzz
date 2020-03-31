@@ -1,0 +1,75 @@
+.\" Copyright (c) 1989 Lars Fredriksen, Bryan So and Barton Miller
+.\" All rights reserved.  
+.\"
+.\"	@(#)ptyjig.1
+.\"
+.TH PTYJIG 1 "December 1, 1988"
+.UC 4
+.SH NAME
+ptyjig \- pseudo-terminal pipe
+.SH SYNOPSIS
+.B ptyjig
+[ option ] ...
+command 
+[ args ] ...
+.SH DESCRIPTION
+.I Ptyjig
+executes the Unix 
+.I command
+with 
+.I args
+as its arguments if supplied.  
+The standard input of ptyjig is piped to 
+.I command
+as if typed at a terminal.
+Ptyjig is expected to be used with \fIfuzz(1)\fP to test interactive
+(terminal based) programs. If the test program is stopped by a
+Control-Z, it is resumed immediately.
+.PP
+The following options can be specified.
+.TP
+.B \-e
+Do not send EOF character after \fIstdin\fP has exhausted.
+.TP
+.B \-s
+Do not process interrupt signals, such as SIGINT, SIGQUIT and SIGSTOP.
+.TP
+.B \-x
+Do not write output from \fIcommand\fP to \fIstdout\fP.
+.TP
+.BI \-i " file"
+Save the input stream sent to \fIcommand\fP into \fIfile\fP.
+.TP
+.BI \-o " file"
+Save the output produced by \fIcommand\fP into \fIfile\fP.
+.TP
+.BI \-d " delay"
+Wait \fIdelay\fP seconds after sending each character. 
+.TP
+.BI \-t " interval"
+If input has exhausted but \fIcommand\fP has
+neither exited nor sent any output, exit after \fIinterval\fP
+seconds. Default is 2.0 seconds.
+.TP
+\fIDelay\fP and \fIinterval\fP can have fractions.
+.SH EXAMPLE
+ptyjig -o out -d 0.2 -t 10 vi text1 <text2
+.PP
+Runs "vi text1" in background, typing the characters in \fItext2\fP
+into it with a delay of 0.2sec between characters, and save the
+output to \fIout\fP. The program stops when \fIvi\fP stops outputting
+for 10 seconds.
+.SH AUTHORS
+Lars Fredriksen, Bryan So.
+.SH FILES
+/dev/tty*
+.br
+/dev/pty*
+.SH "SEE ALSO"
+fuzz(1), sigvec(2), pty(4), tty(4)
+.SH BUGS
+The trace files specified by \-i and \-o options may contain more
+than actual characters sent to and received from \fIcommand\fP. This
+is due to the fact that after \fIcommand\fP exits and before \fIptyjig\fP
+is signaled, some characters may be sent. This can be prevented by
+setting \-d option to some suitable delay.
