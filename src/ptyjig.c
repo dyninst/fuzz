@@ -57,7 +57,7 @@
  *
  */
 
-#define DEBUG_off
+#define DEBUG
 
 // detect the operating system
 // MACOS
@@ -856,9 +856,7 @@ int main(int argc, char** argv) {
         fprintf(stderr,"ptyjig: %s: %s%s\n",progname,
                  mesg[WTERMSIG(status)].pname,
                  WCOREDUMP(status) ? " (core dumped)" : "");
-      	if(WTERMSIG(status) == 11){
-      	  core = 139;
-      	}
+        core = 128 + WTERMSIG(status);
       }
     }
     return core;
