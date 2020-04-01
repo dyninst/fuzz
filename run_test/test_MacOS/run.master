@@ -1,5 +1,4 @@
-file as
-stdin as
+cp a.out as
 file awk '{print}'
 stdin bc
 file bison
@@ -12,14 +11,14 @@ stdin col
 file colcrt
 stdin colrm 6
 two_files comm
-file compress
+cp t compress
 file cpp
 stdin csh 
 file ctags
-file cut
+file cut -b 10
 stdin dc 
 stdin dd 
-two_files diff
+two_files diff 
 stdin ed
 stdin eqn
 stdin ex
@@ -28,7 +27,7 @@ stdin expr
 file find
 file fmt
 file fold
-file gcc
+cp t.c gcc
 stdin lldb
 file grep "e" -f
 stdin grn
@@ -38,7 +37,7 @@ file indent
 two_files join
 file look a
 stdin m4
-file make
+file make -f
 stdin md5
 file mdls
 file mig
@@ -65,8 +64,8 @@ stdin tr a b
 file troff
 file tsort
 file ul
-two_files uniq
-file units -f
+file uniq
+stdin units
 file wc
 stdin xargs
 file yacc
@@ -76,6 +75,5 @@ pty htop
 pty vim
 pty telnet
 pty ex
-pty ftp
 pty csh
 pty zsh

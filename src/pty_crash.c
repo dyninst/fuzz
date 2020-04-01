@@ -13,6 +13,7 @@ int main( int argc, char *argv[] )
 		if(strcmp(buf, "quit") == 0) {
 			return 0;
 		}
+
 		else if(strcmp(buf, "bus_mac") == 0) {
 			char* filename = "hahaha";
 			filename[0] = 'a';

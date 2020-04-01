@@ -32,15 +32,6 @@ def random_subset(s):
 
 # run cmds with input from file
 def test_file(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -48,10 +39,6 @@ def test_file(item, output, test_list, fnull, timeout):
   for test_case in test_list:
     try:
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
 
       # print final_cmd to stdin
@@ -74,15 +61,6 @@ def test_file(item, output, test_list, fnull, timeout):
 
 # run cmds with input from file with specified extension name
 def test_cp(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", index_num)[0]
   file_tmp = item.split(" ", index_num)[1]
   cmd = item.split(" ", index_num)[index_num]
@@ -92,14 +70,10 @@ def test_cp(item, output, test_list, fnull, timeout):
     try:
       subprocess.call(["cp %s %s" % (test_case, file_tmp)], shell=True)
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
-      final_cmd = final_cmd + " " + file_tmp + " " + test_case
+      final_cmd = final_cmd + " " + file_tmp 
 
       # print final_cmd to stdin
-      print("running: ", final_cmd)
+      print("running: %s using case %s" % (final_cmd, test_case))
 
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
       # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
@@ -120,15 +94,6 @@ def test_cp(item, output, test_list, fnull, timeout):
 
 # run cmds with input from stdin
 def test_stdin(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -136,10 +101,6 @@ def test_stdin(item, output, test_list, fnull, timeout):
   for test_case in test_list:
     try:
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
 
       # print final_cmd to stdin
@@ -162,15 +123,6 @@ def test_stdin(item, output, test_list, fnull, timeout):
 
 # run cmds with two input files
 def test_two_files(item, output, test_list, fnull, timeout): 
-  # check if there are options
-  idx = item.find("[")
-
-  # idx >= 0 when match "[" successfully
-  if idx >= 0:
-    options = item[idx + 1: -1]
-    options = options.split()
-    item = item[0: idx]
-
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
@@ -181,10 +133,6 @@ def test_two_files(item, output, test_list, fnull, timeout):
       test_case2 = random.choice(test_list)
 
       final_cmd = cmd
-      # if options exist, append options to the final_cmd
-      if idx >= 0:
-        options_random = random_subset(options)
-        final_cmd = final_cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
 
       # print final_cmd to stdin
@@ -214,7 +162,7 @@ def test_pty(item, output, test_list, fnull, timeout):
 
   for test_case in test_list:
     try:
-      final_cmd = "../src/pty_cross_platform -d 0.001 " + cmd
+      final_cmd = "../src/ptyjig -d 0.001 " + cmd
       subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
       # remove all ^z in tmp
       fr = open("tmp", "rb")
@@ -233,7 +181,7 @@ def test_pty(item, output, test_list, fnull, timeout):
       final_cmd = final_cmd + " < " + "tmp"
 
       # print final_cmd to stdin
-      print("running: ", final_cmd)
+      print("running: %s using case %s " % (final_cmd, test_case))
 
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
       # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
@@ -336,7 +284,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -354,7 +302,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -372,7 +320,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -390,7 +338,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
@@ -408,7 +356,7 @@ if __name__ == "__main__":
         file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
 
         # if file exists, check if it is finished
-        if os.path.exists(file_name):
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
           with open(file_name, "r") as f:
             if f.readlines()[-1] == "finished\n":
               continue
