@@ -57,7 +57,7 @@
  *
  */
 
-#define DEBUG
+#define DEBUG_off
 
 // detect the operating system
 // MACOS
