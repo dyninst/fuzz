@@ -14,8 +14,14 @@ int main( int argc, char *argv[] )
 			return 0;
 		}
 		else if(strcmp(buf, "bus") == 0) {
-			char* filename = "hahaha";
-			filename[0] = 'a';
+			// char* filename = "hahaha";
+			// filename[0] = 'a';
+			int *iptr;
+    	char *cptr;
+			cptr = malloc(sizeof(int) + 1);
+			iptr = (int *) ++cptr;
+			*iptr = 42;
+
 		}
 		else if(strcmp(buf, "segment") == 0) {
 			// int arr[2]; 
