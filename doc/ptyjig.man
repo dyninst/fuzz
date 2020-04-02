@@ -25,6 +25,7 @@ as if typed at a terminal.
 Ptyjig is expected to be used with \fIfuzz(1)\fP to test interactive
 (terminal based) programs. If the test program is stopped by a
 Control-Z, it is resumed immediately.
+Ptyjig has been modified to run on Linux, MacOS and freeBSD. It captures the abnormal termination of a utility and returns it to operating system.
 .PP
 The following options can be specified.
 .TP
