@@ -73,7 +73,7 @@ def test_cp(item, output, test_list, fnull, timeout):
       final_cmd = final_cmd + " " + file_tmp 
 
       # print final_cmd to stdin
-      print("running: %s using case %s" % (final_cmd, test_case))
+      print("running: %s, using case: %s" % (final_cmd, test_case))
 
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
       # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
@@ -83,13 +83,14 @@ def test_cp(item, output, test_list, fnull, timeout):
 
     except(FileNotFoundError):
       output.write("%s %s not found\n" % (cmd_type, final_cmd))
-      break
 
     else:
       # check return value, record exit code with special meaning
       if retcode >= return_value or retcode < 0:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
-        subprocess.call("rm %s" % file_tmp, shell=True)
+    
+    finally:  
+      subprocess.call("rm %s" % file_tmp, shell=True)
 
 
 # run cmds with input from stdin
@@ -114,7 +115,6 @@ def test_stdin(item, output, test_list, fnull, timeout):
 
     except(FileNotFoundError):
       output.write("%s %s not found\n" % (cmd_type, final_cmd))
-      break
 
     else:
       # check return value, record exit code with special meaning
@@ -154,50 +154,51 @@ def test_two_files(item, output, test_list, fnull, timeout):
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
-def test_pty(item, output, test_list, fnull, timeout):
+def test_pty(item, output, test_list, fnull):
 
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
 
   for test_case in test_list:
-    try:
-      final_cmd = "../src/ptyjig -d 0.001 " + cmd
-      subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
-      # remove all ^z in tmp
-      fr = open("tmp", "rb")
-      s = fr.read()
-      fr.close()
-      s = s.replace(b"\x1a", b"")
-
-      # Z or z will suspend telnet 
-      if(cmd == "telnet"):
-          s = s.replace(b"Z", b"")
-          s = s.replace(b"z", b"")
-      fw = open("tmp", "wb")
-      fw.write(s)
-      fw.close()
-
-      final_cmd = final_cmd + " < " + "tmp"
-
-      # print final_cmd to stdin
-      print("running: %s using case %s " % (final_cmd, test_case))
-
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-      # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
-
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s %s hang\n" % (cmd_type, final_cmd, test_case))
-
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
-      break
-
+    # Based on observation, htop should be fed input slowly, otherwise it cannot quit
+    if(cmd == "htop"):
+      final_cmd = "../src/ptyjig -d 0.05 -t 10 " + cmd
     else:
-      # check return value, record exit code with special meaning
-      if retcode >= return_value or retcode < 0:
-        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
-        subprocess.call("rm tmp", shell=True)
+      final_cmd = "../src/ptyjig -d 0.002 -t 10 " + cmd
+    
+    subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+    # remove all ^z in tmp
+    fr = open("tmp", "rb")
+    s = fr.read()
+    fr.close()
+    s = s.replace(b"\x1a", b"")
+
+    # Z or z will suspend telnet 
+    if(cmd == "telnet"):
+        s = s.replace(b"Z", b"")
+        s = s.replace(b"z", b"")
+    fw = open("tmp", "wb")
+    fw.write(s)
+    fw.close()
+
+    final_cmd = final_cmd + " < " + "tmp"
+
+    # print final_cmd to stdin
+    print("running: %s, using case: %s " % (final_cmd, test_case))
+
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+
+    if retcode == 137:
+      output.write("%s %s %s hang, but double check is needed.\n" % (cmd_type, final_cmd, test_case))
+    # check return value, record exit code with special meaning
+    elif retcode >= return_value:
+      output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
+ 
+    subprocess.call("rm tmp", shell=True)
+
+
+
 
 # the script start here
 # create dir for log
@@ -210,7 +211,7 @@ if __name__ == "__main__":
   test_dir = ""
 
   # the result will be saved in output_dir, each cmd corresponds to a result file 
-  result_dir = ""
+  result_dir = "./result"
 
   # the script will test all the files starting with a specified prefix. Prefix is empty string by default, 
   # which means all the files in test_dir will be tested.
@@ -228,12 +229,12 @@ if __name__ == "__main__":
   try:
     opts, args = getopt.getopt(sys.argv[2:],"hi:o:p:t:",["ifile=", "ofile=", "prefix=", "timeout="])
   except getopt.GetoptError as err:
-    print("Usage: python3 run.py [configuration_file] [-i inputfile] [-o outputfile]")
+    print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
     sys.exit(2)
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
-      print("Usage: python3 run.py [configuration_file] [-i inputfile] [-o outputfile]")
+      print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
       sys.exit(2)
     elif opt in ("-i", "--ifile"):
       test_dir = arg
@@ -245,7 +246,7 @@ if __name__ == "__main__":
       timeout = int(arg)
 
   if test_dir == "" or result_dir == "":
-    print("Usage: python3 run.py [configuration_file] [-i inputfile] [-o outputfile]")
+    print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
     sys.exit(2)
 
   # print out the parameters
@@ -311,24 +312,6 @@ if __name__ == "__main__":
         test_file(item, output_file, test_list, fnull, timeout)
         output_file.write("finished\n")
         output_file.close()
-      
-      # pty
-      elif cmd_type == "pty":
-        cmd = item.split(" ", 1)[1]
-        cmd_name = item.split(" ", 2)[1]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
-
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_pty(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
 
       # cp
       elif cmd_type == "cp":
@@ -363,6 +346,24 @@ if __name__ == "__main__":
         output_file = open(file_name, "w")
         output_file.write("start: %s\n" % item)
         test_two_files(item, output_file, test_list, fnull, timeout)
+        output_file.write("finished\n")
+        output_file.close()
+
+      # pty
+      elif cmd_type == "pty":
+        cmd = item.split(" ", 1)[1]
+        cmd_name = item.split(" ", 2)[1]
+        # the filename to be saved as
+        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
+
+        # if file exists, check if it is finished
+        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+          with open(file_name, "r") as f:
+            if f.readlines()[-1] == "finished\n":
+              continue
+        output_file = open(file_name, "w")
+        output_file.write("start: %s\n" % item)
+        test_pty(item, output_file, test_list, fnull)
         output_file.write("finished\n")
         output_file.close()
 
