@@ -90,7 +90,8 @@ def test_cp(item, output, test_list, fnull, timeout):
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
     
     finally:  
-      subprocess.call("rm %s" % file_tmp, shell=True)
+      if(os.path.exists(file_tmp)):
+        subprocess.call("rm %s" % file_tmp, shell=True)
 
 
 # run cmds with input from stdin
@@ -265,6 +266,7 @@ if __name__ == "__main__":
   test_list = os.listdir(test_dir)
   test_list = [file for file in test_list if file.startswith(prefix)]
   test_list = [os.path.join(test_dir, file) for file in test_list]
+  test_list.sort()
 
   # open run.master and test every cmd
   with open(configuration_file, "r") as configuration_reader:
