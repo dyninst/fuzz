@@ -192,7 +192,7 @@ def test_pty(item, output, test_list, fnull, timeout):
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
-      output.write("%s %s %s hang, but double check is needed.\n" % (cmd_type, final_cmd, test_case))
+      output.write("%s %s %s hang, but a manual check is needed.\n" % (cmd_type, final_cmd, test_case))
 
     except(FileNotFoundError):
       output.write("%s %s not found\n" % (cmd_type, final_cmd))
@@ -200,7 +200,7 @@ def test_pty(item, output, test_list, fnull, timeout):
     else:
       # returning 137 indicates the child is killed, which is due to timeout on -t. 
       if retcode == 137:
-        output.write("%s %s %s hang, but double check is needed.\n" % (cmd_type, final_cmd, test_case))
+        output.write("%s %s %s hang, but a manual check is needed.\n" % (cmd_type, final_cmd, test_case))
       # check other return values, record exit code with special meaning
       elif retcode >= return_value:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
