@@ -155,49 +155,58 @@ def test_two_files(item, output, test_list, fnull, timeout):
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
-def test_pty(item, output, test_list, fnull):
+def test_pty(item, output, test_list, fnull, timeout):
 
   cmd_type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   retcode = 0
 
   for test_case in test_list:
-    # Based on observation, htop should be fed input slowly, otherwise it cannot quit
-    if(cmd == "htop"):
-      final_cmd = "../src/ptyjig -d 0.05 -t 10 " + cmd
-    else:
-      final_cmd = "../src/ptyjig -d 0.002 -t 10 " + cmd
-    
-    subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
-    # remove all ^z in tmp
-    fr = open("tmp", "rb")
-    s = fr.read()
-    fr.close()
-    s = s.replace(b"\x1a", b"")
+    try:
+      # Based on observation, htop should be fed input slowly, otherwise it cannot quit
+      if(cmd == "htop"):
+        final_cmd = "../src/ptyjig -d 0.05 " + cmd
+      else:
+        final_cmd = "../src/ptyjig -d 0.002 " + cmd
+      
+      subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+      # remove all ^z in tmp
+      fr = open("tmp", "rb")
+      s = fr.read()
+      fr.close()
+      s = s.replace(b"\x1a", b"")
 
-    # Z or z will suspend telnet 
-    if(cmd == "telnet"):
-        s = s.replace(b"Z", b"")
-        s = s.replace(b"z", b"")
-    fw = open("tmp", "wb")
-    fw.write(s)
-    fw.close()
+      # Z or z will suspend telnet 
+      if(cmd == "telnet"):
+          s = s.replace(b"Z", b"")
+          s = s.replace(b"z", b"")
+      fw = open("tmp", "wb")
+      fw.write(s)
+      fw.close()
 
-    final_cmd = final_cmd + " < " + "tmp"
+      final_cmd = final_cmd + " < " + "tmp"
 
-    # print final_cmd to stdin
-    print("running: %s, using case: %s " % (final_cmd, test_case))
+      # print final_cmd to stdin
+      print("running: %s, using case: %s " % (final_cmd, test_case))
 
-    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    if retcode == 137:
+    except(subprocess.TimeoutExpired):
       output.write("%s %s %s hang, but double check is needed.\n" % (cmd_type, final_cmd, test_case))
-    # check return value, record exit code with special meaning
-    elif retcode >= return_value:
-      output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
- 
-    subprocess.call("rm tmp", shell=True)
 
+    except(FileNotFoundError):
+      output.write("%s %s not found\n" % (cmd_type, final_cmd))
+
+    else:
+      # returning 137 indicates the child is killed, which is due to timeout on -t. 
+      if retcode == 137:
+        output.write("%s %s %s hang, but double check is needed.\n" % (cmd_type, final_cmd, test_case))
+      # check other return values, record exit code with special meaning
+      elif retcode >= return_value:
+        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
+
+    finally:
+      subprocess.call("rm tmp", shell=True)
 
 
 
@@ -365,7 +374,7 @@ if __name__ == "__main__":
               continue
         output_file = open(file_name, "w")
         output_file.write("start: %s\n" % item)
-        test_pty(item, output_file, test_list, fnull)
+        test_pty(item, output_file, test_list, fnull, timeout)
         output_file.write("finished\n")
         output_file.close()
 
