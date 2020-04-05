@@ -20,6 +20,8 @@ arg_num = 6
 
 # redirect the output to /dev/null, otherwise the shell will be overwhelmed by outputs
 fnull = open(os.devnull, 'w')
+ptyjig_path = "../src/ptyjig"
+# ptyjig_delay = 0.001
 
 # return a random subset of s, each element has 0.5 probability
 def random_subset(s):
@@ -29,6 +31,90 @@ def random_subset(s):
     if random.random() > float_rand:
       out = out + el + " "
   return out
+
+def parse_a_line(line, testcase, testcase_list):
+
+  # type is "stdin", "file", "two_files", "cp" or "pty"
+  test_type = line.split()[0]
+
+  # get the name of temporary file if a utility needs to copy test case to it
+  # if cp, file name is specified, e.g., t.c
+  if(test_type == "cp"):
+    new_file_name = line.split()[1]
+  # if pty, just copy test cases as tmp
+  elif(test_type == "pty"):
+    new_file_name = "tmp"
+  # other test_types don't need to copy test cases
+  else:
+    new_file_name = ""
+
+  # get the name of utilities
+  # if cp, utility name is the third element of line.split(), e.g., cc from "cp t.c cc"
+  if(test_type == "cp"):
+    utility_name = line.split()[2]
+  # otherwise, utility name is the second element of line.split(), e.g., flex from "stdin flex"
+  else:
+    utility_name = line.split()[1]
+
+  # get the options in option pool
+  all_options_from_pool = line.split("#")
+  options_sampled_from_pool = random_subset(all_options_from_pool.split())
+
+  # get the final_cmd that can be run
+  # part_of_line is the part behind utility name
+  if(test_type == "cp"):
+    part_of_line = line.split("", 3)[3]
+  else:
+    part_of_line = line.split("", 2)[2]
+
+  if(test_type == "stdin"):
+    final_cmd = utility_name 
+              + " " + part_of_line.split("#")[0]
+              + " " + options_sampled_from_pool 
+              + " " + part_of_line.split("#")[2]
+              + " < " + testcase
+
+  elif(test_type == "file"):
+    final_cmd = utility_name 
+              + " " + part_of_line.split("#")[0]
+              + " " + options_sampled_from_pool 
+              + " " + part_of_line.split("#")[2]
+              + " " + testcase
+
+  elif(test_type == "cp"):
+    final_cmd = utility_name 
+              + " " + part_of_line.split("#")[0]
+              + " " + options_sampled_from_pool 
+              + " " + part_of_line.split("#")[2]
+              + " " + new_file_name
+
+  elif(test_type == "two_files"):
+    test_case1 = random.choice(test_list)
+    test_case2 = random.choice(test_list)
+    final_cmd = utility_name 
+              + " " + part_of_line.split("#")[0]
+              + " " + options_sampled_from_pool 
+              + " " + part_of_line.split("#")[2]
+              + " " + test_case1
+              + " " + test_case2
+
+  elif(test_type == "pty"):
+    test_case1 = random.choice(test_list)
+    test_case2 = random.choice(test_list)
+    final_cmd = ptyjig_path
+              # -d delay will be set in test_pty
+              + " " + "-d" + " " + "%f"
+              + " " + utility_name
+              + " " + part_of_line.split("#")[0] 
+              + " " + options_sampled_from_pool 
+              + " " + part_of_line.split("#")[2]
+              + " < " + new_file_name
+
+  log_name = "%s.%s" % (utility_name, test_type)
+
+  return final_cmd, test_type, utility_name, new_file_name, options_sampled_from_pool, log_name
+
+
 
 # run cmds with input from file
 def test_file(item, output, test_list, fnull, timeout): 
