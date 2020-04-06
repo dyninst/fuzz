@@ -21,7 +21,6 @@ arg_num = 6
 # redirect the output to /dev/null, otherwise the shell will be overwhelmed by outputs
 fnull = open(os.devnull, 'w')
 ptyjig_path = "../src/ptyjig"
-# ptyjig_delay = 0.001
 
 # return a random subset of s, each element has 0.5 probability
 def random_subset(s):
@@ -32,7 +31,41 @@ def random_subset(s):
       out = out + el + " "
   return out
 
-def parse_a_line(line, testcase, testcase_list):
+def line_syntax_error(line):
+  if(not line.startswith("//") \
+    and not line.startswith("file ") \
+    and not line.startswith("stdin ") \
+    and not line.startswith("cp ") \
+    and not line.startswith("two_files ") \
+    and not line.startswith("pty ")
+    ):
+    return True
+
+  # if specify option pool, there should be two "#"s
+  l = line.split("#")
+  if(len(l) == 2 or len(l) > 3):
+    return True
+
+  return False
+
+
+def have_option_pool(line):
+  l = line.split("#")
+  if(len(l) == 1):
+    return False
+  else:
+    return True
+
+def get_options_from_pool(option_part_of_line):
+  l = line.split("#")
+  return l[1]
+
+# leave a space for randomly selected options
+def get_other_options(option_part_of_line):
+  l = line.split("#")
+  return l[0] + " %s " + l[2]
+
+def parse_a_line(line):
 
   # type is "stdin", "file", "two_files", "cp" or "pty"
   test_type = line.split()[0]
@@ -56,70 +89,74 @@ def parse_a_line(line, testcase, testcase_list):
   else:
     utility_name = line.split()[1]
 
-  # get the options in option pool
-  all_options_from_pool = line.split("#")[1]
+  # check if option pool is specified
+  flag_op = have_option_pool(line)
 
   # get the final_cmd that can be run
-  # part_of_line is the part behind utility name
+  # option_part_of_line is the part behind utility name
   if(test_type == "cp"):
-    part_of_line = line.split("", 3)[3]
+    if(flag_op):
+      option_part_of_line = line.split(" ", 3)[3]
+    else:
+      option_part_of_line = line.split(" ", 2)[2]
   else:
-    part_of_line = line.split("", 2)[2]
+    print(line)
+    if(flag_op):
+      option_part_of_line = line.split(" ", 2)[2]
+    else:
+      option_part_of_line = line.split(" ", 1)[1]
+
+
+  all_options_from_pool = ""
+  other_options = "%s"
+
+  if(flag_op):
+    # get the options in option pool
+    all_options_from_pool = get_options_from_pool(option_part_of_line)
+    other_options = get_other_options(option_part_of_line)
+
 
   if(test_type == "stdin"):
-    final_cmd = utility_name 
-              + " " + part_of_line.split("#")[0]
-              + " " + "%s" 
-              + " " + part_of_line.split("#")[2]
-              + " < " + testcase
+    # leave a space for testcase
+    final_cmd = utility_name \
+              + " " + other_options \
+              + " < " + "%s" 
 
   elif(test_type == "file"):
-    final_cmd = utility_name 
-              + " " + part_of_line.split("#")[0]
-              + " " + "%s" 
-              + " " + part_of_line.split("#")[2]
-              + " " + testcase
+    # leave a space for testcase
+    final_cmd = utility_name \
+              + " " + other_options \
+              + " " + "%s"
 
   elif(test_type == "cp"):
-    final_cmd = utility_name 
-              + " " + part_of_line.split("#")[0]
-              + " " + "%s" 
-              + " " + part_of_line.split("#")[2]
+    final_cmd = utility_name \
+              + " " + other_options \
               + " " + new_file_name
 
   elif(test_type == "two_files"):
-    test_case1 = random.choice(test_list)
-    test_case2 = random.choice(test_list)
-    final_cmd = utility_name 
-              + " " + part_of_line.split("#")[0]
-              + " " + "%s" 
-              + " " + part_of_line.split("#")[2]
-              + " " + test_case1
-              + " " + test_case2
+    # leave two space for testcases
+    final_cmd = utility_name \
+              + " " + other_options \
+              + " " + "%s" \
+              + " " + "%s"
 
   elif(test_type == "pty"):
-    test_case1 = random.choice(test_list)
-    test_case2 = random.choice(test_list)
-    final_cmd = ptyjig_path
-              # -d delay will be set in test_pty
-              + " " + "-d" + " " + "%f"
-              + " " + utility_name
-              + " " + part_of_line.split("#")[0] 
-              + " " + "%s" 
-              + " " + part_of_line.split("#")[2]
+    # -d delay will be set in run_pty
+    final_cmd = ptyjig_path \
+              + " " + "-d" + " " + "%g" \
+              + " " + utility_name \
+              + " " + other_options \
               + " < " + new_file_name
 
   log_name = "%s.%s" % (utility_name, test_type)
 
   return final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
 
-
-
 # run "file"
-def test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
+def run_file(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase): 
 
   # print final_cmd to stdin
-  final_cmd = final_cmd % options_sampled_from_pool
+  final_cmd = final_cmd % (options_sampled_from_pool, testcase)
   print("running: ", final_cmd)
 
   ret = 0
@@ -128,7 +165,7 @@ def test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool):
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
   except(subprocess.TimeoutExpired):
-    log_writer.write("%s hang\n" % final_cmd)
+    log_writer.write("%s hung\n" % final_cmd)
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
@@ -142,11 +179,11 @@ def test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool):
   finally:
     return ret
 
-# run "stdin", so far it's identical to test_file
-def test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
+# run "stdin", so far it's identical to run_file
+def run_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase): 
 
   # print final_cmd to stdin
-  final_cmd = final_cmd % options_sampled_from_pool
+  final_cmd = final_cmd % (options_sampled_from_pool, testcase)
   print("running: ", final_cmd)
 
   ret = 0
@@ -155,7 +192,7 @@ def test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool):
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
   except(subprocess.TimeoutExpired):
-    log_writer.write("%s hang\n" % final_cmd)
+    log_writer.write("%s hung\n" % final_cmd)
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
@@ -170,22 +207,22 @@ def test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool):
     return ret
 
 # run "cp", need to copy test case firstly
-def test_cp(final_cmd, utility_name, new_file_name, test_case, log_writer, options_sampled_from_pool): 
+def run_cp(final_cmd, utility_name, new_file_name, log_writer, options_sampled_from_pool, testcase): 
 
   # print final_cmd to stdin
-  final_cmd = final_cmd % options_sampled_from_pool
+  final_cmd = final_cmd % (options_sampled_from_pool)
   print("running: ", final_cmd)
 
   ret = 0
 
   # copy test case to a new temporary file with a specified name
-  subprocess.call(["cp %s %s" % (test_case, new_file_name)], shell=True)
+  subprocess.call(["cp %s %s" % (testcase, new_file_name)], shell=True)
 
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
   except(subprocess.TimeoutExpired):
-    log_writer.write("%s hang\n" % final_cmd)
+    log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
@@ -194,17 +231,17 @@ def test_cp(final_cmd, utility_name, new_file_name, test_case, log_writer, optio
   else:
     # check return value, record exit code with special meaning
     if retcode >= return_value or retcode < 0:
-      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
+      log_writer.write("%s failed, testcase is %s, error: %d\n" % (final_cmd, testcase, retcode))
 
   finally:
     subprocess.call("rm %s" % new_file_name, shell=True)
     return ret
 
-# run "two_files", so far it's identical to test_file
-def test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
+# run "two_files", so far it's identical to run_file
+def run_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase1, testcase2): 
 
   # print final_cmd to stdin
-  final_cmd = final_cmd % options_sampled_from_pool
+  final_cmd = final_cmd % (options_sampled_from_pool, testcase1, testcase2)
   print("running: ", final_cmd)
 
   ret = 0
@@ -213,7 +250,7 @@ def test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_poo
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
   except(subprocess.TimeoutExpired):
-    log_writer.write("%s hang\n" % final_cmd)
+    log_writer.write("%s hung\n" % final_cmd)
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
@@ -228,10 +265,10 @@ def test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_poo
     return ret
 
 # run "pty"
-def test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_from_pool): 
+def run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase): 
 
   # copy test case to tmp and append the designed end file 
-  subprocess.call("cat %s ./end/end_%s > tmp" % (testcase_list, utility_name), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+  subprocess.call("cat %s ./end/end_%s > tmp" % (testcase, utility_name), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
 
   # remove all ^z in tmp
   fr = open("tmp", "rb")
@@ -240,7 +277,7 @@ def test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_fro
   s = s.replace(b"\x1a", b"")
 
   # Z or z will suspend telnet 
-  if(cmd == "telnet"):
+  if(utility_name == "telnet"):
       s = s.replace(b"Z", b"")
       s = s.replace(b"z", b"")
   fw = open("tmp", "wb")
@@ -249,6 +286,7 @@ def test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_fro
 
   # htop needs to be fed input slowly, otherwise it can't quit
   if(utility_name == "htop"):
+
     final_cmd = final_cmd % (0.05, options_sampled_from_pool)
   else:
     final_cmd = final_cmd % (0.001, options_sampled_from_pool)
@@ -262,18 +300,23 @@ def test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_fro
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
   except(subprocess.TimeoutExpired):
-    log_writer.write("%s hang\n" % final_cmd)
+    log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
+  # killed by python script because of timeout
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
     ret = -1
 
   else:
+    # killed by built-in timer of ptyjig because of timeout
+    if(retcode == 137 or retcode == -9):
+      log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
     # check return value, record exit code with special meaning
     if retcode >= return_value or retcode < 0:
-      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
+      log_writer.write("%s failed, testcase is %s, error: %d\n" % (final_cmd, testcase, retcode))
 
   finally:
+    subprocess.call("rm tmp", shell=True)
     return ret
 
 
@@ -352,38 +395,40 @@ if __name__ == "__main__":
       line = line.strip()
       print("start testing: ", line)
 
-      # parse the line
-      final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name = parse_a_line(line, testcase, testcase_list)
+      # check syntax err
+      err = line_syntax_error(line)
+      if(err):
+        print("invalid syntax: %s", line)
+        continue
 
+      # parse the line
+      final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name = parse_a_line(line)
+
+      log_path = os.path.join(result_dir, log_name)
       # if the log exists and have been finished, go to test the next utility
-      if os.path.exists(log_name) and os.stat(log_name).st_size != 0:
-        with open(log_name, "r") as f:
+      if os.path.exists(log_path) and os.stat(log_path).st_size != 0:
+        with open(log_path, "r") as f:
           if f.readlines()[-1] == "finished\n":
-            break
+            continue
 
       # otherwise, create the log or overwrite it 
-      log_writer = open(log_name, "w")
+      log_writer = open(log_path, "w")
       log_writer.write("start: %s\n" % line)
 
-      for testcase in testcase_list:
+      # go through every testcase in list
+      for i in range(len(testcase_list)):
         options_sampled_from_pool = random_subset(all_options_from_pool.split())
 
         if(test_type == "file"):
-          test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool)
+          run_file(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase_list[i])
         elif(test_type == "stdin"):
-          test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool)
+          run_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase_list[i])
         elif(test_type == "cp"):
-          test_cp(final_cmd, utility_name, new_file_name, test_case, log_writer, options_sampled_from_pool)
+          run_cp(final_cmd, utility_name, new_file_name, log_writer, options_sampled_from_pool, testcase_list[i])
         elif(test_type == "two_files"):
-          test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool)
-        elif(test_type == "pty"):
-          test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_from_pool)
+          run_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool, random.choice(testcase_list), random.choice(testcase_list))
         else:
-          if(line.startswith("//")):
-            break
-          else:
-            print("unknown type: %s", test_type)
-            break
+          run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, testcase_list[i])
 
       log_writer.write("finished\n")
       log_writer.close()
