@@ -1,5 +1,5 @@
 stdin as
-file awk '{print}'
+file awk -f
 stdin bc
 file bison
 file calendar -f 

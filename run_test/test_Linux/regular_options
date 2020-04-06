@@ -1,5 +1,5 @@
 stdin as [-a -D -L -R -v -W -Z -w -x]
-file awk '{print}'
+file awk -f
 stdin bc [-l -w -s -q]
 file bison [-y -t --locations -l -k -d -v]
 file calendar [-a -b -w] -f 
