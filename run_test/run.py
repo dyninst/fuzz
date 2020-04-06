@@ -57,8 +57,7 @@ def parse_a_line(line, testcase, testcase_list):
     utility_name = line.split()[1]
 
   # get the options in option pool
-  all_options_from_pool = line.split("#")
-  options_sampled_from_pool = random_subset(all_options_from_pool.split())
+  all_options_from_pool = line.split("#")[1]
 
   # get the final_cmd that can be run
   # part_of_line is the part behind utility name
@@ -70,21 +69,21 @@ def parse_a_line(line, testcase, testcase_list):
   if(test_type == "stdin"):
     final_cmd = utility_name 
               + " " + part_of_line.split("#")[0]
-              + " " + options_sampled_from_pool 
+              + " " + "%s" 
               + " " + part_of_line.split("#")[2]
               + " < " + testcase
 
   elif(test_type == "file"):
     final_cmd = utility_name 
               + " " + part_of_line.split("#")[0]
-              + " " + options_sampled_from_pool 
+              + " " + "%s" 
               + " " + part_of_line.split("#")[2]
               + " " + testcase
 
   elif(test_type == "cp"):
     final_cmd = utility_name 
               + " " + part_of_line.split("#")[0]
-              + " " + options_sampled_from_pool 
+              + " " + "%s" 
               + " " + part_of_line.split("#")[2]
               + " " + new_file_name
 
@@ -93,7 +92,7 @@ def parse_a_line(line, testcase, testcase_list):
     test_case2 = random.choice(test_list)
     final_cmd = utility_name 
               + " " + part_of_line.split("#")[0]
-              + " " + options_sampled_from_pool 
+              + " " + "%s" 
               + " " + part_of_line.split("#")[2]
               + " " + test_case1
               + " " + test_case2
@@ -106,205 +105,186 @@ def parse_a_line(line, testcase, testcase_list):
               + " " + "-d" + " " + "%f"
               + " " + utility_name
               + " " + part_of_line.split("#")[0] 
-              + " " + options_sampled_from_pool 
+              + " " + "%s" 
               + " " + part_of_line.split("#")[2]
               + " < " + new_file_name
 
   log_name = "%s.%s" % (utility_name, test_type)
 
-  return final_cmd, test_type, utility_name, new_file_name, options_sampled_from_pool, log_name
+  return final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
 
 
 
-# run cmds with input from file
-def test_file(item, output, test_list, fnull, timeout): 
-  cmd_type = item.split(" ", 1)[0]
-  cmd = item.split(" ", 1)[1]
-  retcode = 0
+# run "file"
+def test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
 
-  for test_case in test_list:
-    try:
-      final_cmd = cmd
-      final_cmd = final_cmd + " " + test_case
+  # print final_cmd to stdin
+  final_cmd = final_cmd % options_sampled_from_pool
+  print("running: ", final_cmd)
 
-      # print final_cmd to stdin
-      print("running: ", final_cmd)
+  ret = 0
 
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-      # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
+  try:
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s hang\n" % (cmd_type, final_cmd))
+  except(subprocess.TimeoutExpired):
+    log_writer.write("%s hang\n" % final_cmd)
 
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
-      break
+  except(FileNotFoundError):
+    log_writer.write("%s not found\n" % utility_name)
+    ret = -1
 
-    else:
-      # check return value, record exit code with special meaning
-      if retcode >= return_value or retcode < 0:
-        output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
+  else:
+    # check return value, record exit code with special meaning
+    if retcode >= return_value or retcode < 0:
+      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
-# run cmds with input from file with specified extension name
-def test_cp(item, output, test_list, fnull, timeout): 
-  cmd_type = item.split(" ", index_num)[0]
-  file_tmp = item.split(" ", index_num)[1]
-  cmd = item.split(" ", index_num)[index_num]
-  retcode = 0
+  finally:
+    return ret
 
-  for test_case in test_list:
-    try:
-      subprocess.call(["cp %s %s" % (test_case, file_tmp)], shell=True)
-      final_cmd = cmd
-      final_cmd = final_cmd + " " + file_tmp 
+# run "stdin", so far it's identical to test_file
+def test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
 
-      # print final_cmd to stdin
-      print("running: %s, using case: %s" % (final_cmd, test_case))
+  # print final_cmd to stdin
+  final_cmd = final_cmd % options_sampled_from_pool
+  print("running: ", final_cmd)
 
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-      # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
+  ret = 0
 
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s %s hang\n" % (cmd_type, final_cmd, test_case))
+  try:
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
+  except(subprocess.TimeoutExpired):
+    log_writer.write("%s hang\n" % final_cmd)
 
-    else:
-      # check return value, record exit code with special meaning
-      if retcode >= return_value or retcode < 0:
-        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
-    
-    finally:  
-      if(os.path.exists(file_tmp)):
-        subprocess.call("rm %s" % file_tmp, shell=True)
+  except(FileNotFoundError):
+    log_writer.write("%s not found\n" % utility_name)
+    ret = -1
 
+  else:
+    # check return value, record exit code with special meaning
+    if retcode >= return_value or retcode < 0:
+      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
-# run cmds with input from stdin
-def test_stdin(item, output, test_list, fnull, timeout): 
-  cmd_type = item.split(" ", 1)[0]
-  cmd = item.split(" ", 1)[1]
-  retcode = 0
+  finally:
+    return ret
 
-  for test_case in test_list:
-    try:
-      final_cmd = cmd
-      final_cmd = final_cmd + " < " + test_case
+# run "cp", need to copy test case firstly
+def test_cp(final_cmd, utility_name, new_file_name, test_case, log_writer, options_sampled_from_pool): 
 
-      # print final_cmd to stdin
-      print("running: ", final_cmd)
+  # print final_cmd to stdin
+  final_cmd = final_cmd % options_sampled_from_pool
+  print("running: ", final_cmd)
 
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-      # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
+  ret = 0
 
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s hang\n" % (cmd_type, final_cmd))
+  # copy test case to a new temporary file with a specified name
+  subprocess.call(["cp %s %s" % (test_case, new_file_name)], shell=True)
 
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
+  try:
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    else:
-      # check return value, record exit code with special meaning
-      if retcode >= return_value or retcode < 0:
-        output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
+  except(subprocess.TimeoutExpired):
+    log_writer.write("%s hang\n" % final_cmd)
 
-# run cmds with two input files
-def test_two_files(item, output, test_list, fnull, timeout): 
-  cmd_type = item.split(" ", 1)[0]
-  cmd = item.split(" ", 1)[1]
-  retcode = 0
+  except(FileNotFoundError):
+    log_writer.write("%s not found\n" % utility_name)
+    ret = -1
 
-  for i in range(len(test_list)):
-    try:
-      test_case1 = random.choice(test_list)
-      test_case2 = random.choice(test_list)
+  else:
+    # check return value, record exit code with special meaning
+    if retcode >= return_value or retcode < 0:
+      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
-      final_cmd = cmd
-      final_cmd = final_cmd + " " + test_case1 + " " + test_case2
+  finally:
+    subprocess.call("rm %s" % new_file_name, shell=True)
+    return ret
 
-      # print final_cmd to stdin
-      print("running: ", final_cmd)
+# run "two_files", so far it's identical to test_file
+def test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool): 
 
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-      # retcode = subprocess.call(final_cmd, shell=True, timeout=timeout)
+  # print final_cmd to stdin
+  final_cmd = final_cmd % options_sampled_from_pool
+  print("running: ", final_cmd)
 
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s hang\n" % (cmd_type, final_cmd))
+  ret = 0
 
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
-      break
+  try:
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    else:
-      # check return value, record exit code with special meaning
-      if retcode >= return_value or retcode < 0:
-        output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
+  except(subprocess.TimeoutExpired):
+    log_writer.write("%s hang\n" % final_cmd)
 
+  except(FileNotFoundError):
+    log_writer.write("%s not found\n" % utility_name)
+    ret = -1
 
-def test_pty(item, output, test_list, fnull, timeout):
+  else:
+    # check return value, record exit code with special meaning
+    if retcode >= return_value or retcode < 0:
+      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
-  cmd_type = item.split(" ", 1)[0]
-  cmd = item.split(" ", 1)[1]
-  retcode = 0
+  finally:
+    return ret
 
-  for test_case in test_list:
-    try:
-      # Based on observation, htop should be fed input slowly, otherwise it cannot quit
-      if(cmd == "htop"):
-        final_cmd = "../src/ptyjig -d 0.05 " + cmd
-      else:
-        final_cmd = "../src/ptyjig -d 0.002 " + cmd
-      
-      subprocess.call("cat %s ./end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
-      # remove all ^z in tmp
-      fr = open("tmp", "rb")
-      s = fr.read()
-      fr.close()
-      s = s.replace(b"\x1a", b"")
+# run "pty"
+def test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_from_pool): 
 
-      # Z or z will suspend telnet 
-      if(cmd == "telnet"):
-          s = s.replace(b"Z", b"")
-          s = s.replace(b"z", b"")
-      fw = open("tmp", "wb")
-      fw.write(s)
-      fw.close()
+  # copy test case to tmp and append the designed end file 
+  subprocess.call("cat %s ./end/end_%s > tmp" % (testcase_list, utility_name), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
 
-      final_cmd = final_cmd + " < " + "tmp"
+  # remove all ^z in tmp
+  fr = open("tmp", "rb")
+  s = fr.read()
+  fr.close()
+  s = s.replace(b"\x1a", b"")
 
-      # print final_cmd to stdin
-      print("running: %s, using case: %s " % (final_cmd, test_case))
+  # Z or z will suspend telnet 
+  if(cmd == "telnet"):
+      s = s.replace(b"Z", b"")
+      s = s.replace(b"z", b"")
+  fw = open("tmp", "wb")
+  fw.write(s)
+  fw.close()
 
-      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+  # htop needs to be fed input slowly, otherwise it can't quit
+  if(utility_name == "htop"):
+    final_cmd = final_cmd % (0.05, options_sampled_from_pool)
+  else:
+    final_cmd = final_cmd % (0.001, options_sampled_from_pool)
 
-    except(subprocess.TimeoutExpired):
-      output.write("%s %s %s hang, but a manual check is needed.\n" % (cmd_type, final_cmd, test_case))
+  # print final_cmd to stdin
+  print("running: ", final_cmd)
 
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (cmd_type, final_cmd))
+  ret = 0
 
-    else:
-      # returning 137 indicates the child is killed, which is due to timeout on -t. 
-      if retcode == 137:
-        output.write("%s %s %s hang, but a manual check is needed.\n" % (cmd_type, final_cmd, test_case))
-      # check other return values, record exit code with special meaning
-      elif retcode >= return_value:
-        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
+  try:
+    retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
-    finally:
-      subprocess.call("rm tmp", shell=True)
+  except(subprocess.TimeoutExpired):
+    log_writer.write("%s hang\n" % final_cmd)
+
+  except(FileNotFoundError):
+    log_writer.write("%s not found\n" % utility_name)
+    ret = -1
+
+  else:
+    # check return value, record exit code with special meaning
+    if retcode >= return_value or retcode < 0:
+      log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
+
+  finally:
+    return ret
 
 
 
 # the script start here
-# create dir for log
-
 if __name__ == "__main__":
 
   # options
 
   # where are the test cases
-  test_dir = ""
+  test_dir = "../../testcases"
 
   # the result will be saved in output_dir, each cmd corresponds to a result file 
   result_dir = "./result"
@@ -357,112 +337,57 @@ if __name__ == "__main__":
     os.makedirs(result_dir)
 
   # get path of all test cases
-  test_list = []
-  test_list = os.listdir(test_dir)
-  test_list = [file for file in test_list if file.startswith(prefix)]
-  test_list = [os.path.join(test_dir, file) for file in test_list]
-  test_list.sort()
+  testcase_list = []
+  testcase_list = os.listdir(test_dir)
+  testcase_list = [file for file in testcase_list if file.startswith(prefix)]
+  testcase_list = [os.path.join(test_dir, file) for file in testcase_list]
+  testcase_list.sort()
 
   # open run.master and test every cmd
   with open(configuration_file, "r") as configuration_reader:
     utilities = configuration_reader.readlines()
 
     # process every line in configuration_file
-    for item in utilities:
-      print("start testing: ", item)
+    for line in utilities:
+      line = line.strip()
+      print("start testing: ", line)
 
-      item = item.strip()
-      cmd_type = item.split(" ", 1)[0]
-      
-      # stdin
-      if cmd_type == "stdin":
-        cmd = item.split(" ", 1)[1]
-        cmd_name = item.split(" ", 2)[1]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
+      # parse the line
+      final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name = parse_a_line(line, testcase, testcase_list)
 
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_stdin(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
+      # if the log exists and have been finished, go to test the next utility
+      if os.path.exists(log_name) and os.stat(log_name).st_size != 0:
+        with open(log_name, "r") as f:
+          if f.readlines()[-1] == "finished\n":
+            break
 
-      # file
-      elif cmd_type == "file":
-        cmd = item.split(" ", 1)[1]
-        cmd_name = item.split(" ", 2)[1]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
+      # otherwise, create the log or overwrite it 
+      log_writer = open(log_name, "w")
+      log_writer.write("start: %s\n" % line)
 
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_file(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
+      for testcase in testcase_list:
+        options_sampled_from_pool = random_subset(all_options_from_pool.split())
 
-      # cp
-      elif cmd_type == "cp":
-        cmd = item.split(" ", 2)[2]
-        cmd_name = item.split(" ", 3)[2]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
+        if(test_type == "file"):
+          test_file(final_cmd, utility_name, log_writer, options_sampled_from_pool)
+        elif(test_type == "stdin"):
+          test_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool)
+        elif(test_type == "cp"):
+          test_cp(final_cmd, utility_name, new_file_name, test_case, log_writer, options_sampled_from_pool)
+        elif(test_type == "two_files"):
+          test_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool)
+        elif(test_type == "pty"):
+          test_pty(final_cmd, utility_name, test_case, log_writer, options_sampled_from_pool)
+        else:
+          if(line.startswith("//")):
+            break
+          else:
+            print("unknown type: %s", test_type)
+            break
 
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_cp(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
-
-      # two_files
-      elif cmd_type == "two_files":
-        cmd = item.split(" ", 1)[1]
-        cmd_name = item.split(" ", 2)[1]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
-
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_two_files(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
-
-      # pty
-      elif cmd_type == "pty":
-        cmd = item.split(" ", 1)[1]
-        cmd_name = item.split(" ", 2)[1]
-        # the filename to be saved as
-        file_name = os.path.join(result_dir, "%s.%s" % (cmd_type, cmd_name))
-
-        # if file exists, check if it is finished
-        if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
-          with open(file_name, "r") as f:
-            if f.readlines()[-1] == "finished\n":
-              continue
-        output_file = open(file_name, "w")
-        output_file.write("start: %s\n" % item)
-        test_pty(item, output_file, test_list, fnull, timeout)
-        output_file.write("finished\n")
-        output_file.close()
+      log_writer.write("finished\n")
+      log_writer.close()
+      print("finished: ", line)
 
   fnull.close()
 
