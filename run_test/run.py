@@ -22,6 +22,8 @@ arg_num = 6
 fnull = open(os.devnull, 'w')
 ptyjig_path = "../src/ptyjig"
 
+usage = "Usage: python3 run.py configuration_file [-i inputfile] [-p prefix] [-t timeout] [-o outputfile]"
+
 # return a random subset of s, each element has 0.5 probability
 def random_subset(s):
   out = ""
@@ -30,6 +32,10 @@ def random_subset(s):
     if random.random() > float_rand:
       out = out + el + " "
   return out
+
+def line_commented(line):
+  return line.startswith("//")
+
 
 def line_syntax_error(line):
   if(not line.startswith("//") \
@@ -108,6 +114,7 @@ def parse_a_line(line):
 
 
   all_options_from_pool = ""
+  # leave a space for options from pool
   other_options = "%s"
 
   if(flag_op):
@@ -157,7 +164,7 @@ def run_file(final_cmd, utility_name, log_writer, options_sampled_from_pool, tes
 
   # print final_cmd to stdin
   final_cmd = final_cmd % (options_sampled_from_pool, testcase)
-  print("running: ", final_cmd)
+  print("running: %s" % final_cmd)
 
   ret = 0
 
@@ -184,7 +191,7 @@ def run_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool, te
 
   # print final_cmd to stdin
   final_cmd = final_cmd % (options_sampled_from_pool, testcase)
-  print("running: ", final_cmd)
+  print("running: %s" % final_cmd)
 
   ret = 0
 
@@ -211,7 +218,7 @@ def run_cp(final_cmd, utility_name, new_file_name, log_writer, options_sampled_f
 
   # print final_cmd to stdin
   final_cmd = final_cmd % (options_sampled_from_pool)
-  print("running: ", final_cmd)
+  print("running: %s" % final_cmd)
 
   ret = 0
 
@@ -242,7 +249,7 @@ def run_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool
 
   # print final_cmd to stdin
   final_cmd = final_cmd % (options_sampled_from_pool, testcase1, testcase2)
-  print("running: ", final_cmd)
+  print("running: %s" % final_cmd)
 
   ret = 0
 
@@ -292,7 +299,7 @@ def run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, test
     final_cmd = final_cmd % (0.001, options_sampled_from_pool)
 
   # print final_cmd to stdin
-  print("running: ", final_cmd)
+  print("running: %s" % final_cmd)
 
   ret = 0
 
@@ -312,7 +319,7 @@ def run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, test
     if(retcode == 137 or retcode == -9):
       log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
     # check return value, record exit code with special meaning
-    if retcode >= return_value or retcode < 0:
+    elif retcode >= return_value or retcode < 0:
       log_writer.write("%s failed, testcase is %s, error: %d\n" % (final_cmd, testcase, retcode))
 
   finally:
@@ -340,7 +347,7 @@ if __name__ == "__main__":
   timeout = 300
 
   if len(sys.argv) < arg_num:
-     print("Usage: python3 run.py [configuration_file] [-i inputfile] [-o outputfile]")
+     print(usage)
      sys.exit(2)
 
   configuration_file = sys.argv[1]
@@ -348,12 +355,12 @@ if __name__ == "__main__":
   try:
     opts, args = getopt.getopt(sys.argv[2:],"hi:o:p:t:",["ifile=", "ofile=", "prefix=", "timeout="])
   except getopt.GetoptError as err:
-    print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
+    print(usage)
     sys.exit(2)
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
-      print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
+      print(usage)
       sys.exit(2)
     elif opt in ("-i", "--ifile"):
       test_dir = arg
@@ -365,15 +372,15 @@ if __name__ == "__main__":
       timeout = int(arg)
 
   if test_dir == "" or result_dir == "":
-    print("Usage: python3 run.py configuration_file -i inputfile [-p prefix] [-t timeout] [-o outputfile]")
+    print(usage)
     sys.exit(2)
 
   # print out the parameters
-  print("Input file is ", test_dir)
-  print("Output file is ", result_dir)
-  print("configuration file is ", configuration_file)
-  print("Prefix is ", prefix)
-  print("Timeout is ", timeout)
+  print("Input file is %s" % test_dir)
+  print("Output file is %s" % result_dir)
+  print("configuration file is %s" % configuration_file)
+  print("Prefix is %s" % "None" if(prefix == "") else prefix)
+  print("Timeout is %s" % timeout)
 
   # make directory to save output
   if not os.path.exists(result_dir):
@@ -393,13 +400,24 @@ if __name__ == "__main__":
     # process every line in configuration_file
     for line in utilities:
       line = line.strip()
-      print("start testing: ", line)
+      # skip empty line
+      if(line == ""):
+        continue
+
+      # skip commented line
+      if(line_commented(line)):
+        print("%s" % line)
+        continue
 
       # check syntax err
       err = line_syntax_error(line)
       if(err):
-        print("invalid syntax: %s", line)
+        print("invalid syntax: %s" % line)
+        with open(os.path.join(result_dir, "err"), "a") as err_writer:
+          err_writer.write("invalid syntax: %s\n" % line)
         continue
+
+      print("start testing: %s" % line)
 
       # parse the line
       final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name = parse_a_line(line)
@@ -432,7 +450,7 @@ if __name__ == "__main__":
 
       log_writer.write("finished\n")
       log_writer.close()
-      print("finished: ", line)
+      print("finished: %s" % line)
 
   fnull.close()
 

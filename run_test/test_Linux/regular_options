@@ -1,0 +1,72 @@
+stdin as [-a -D -L -R -v -W -Z -w -x]
+file awk '{print}'
+stdin bc [-l -w -s -q]
+file bison [-y -t --locations -l -k -d -v]
+file calendar [-a -b -w] -f 
+stdin cat [-A -b -e -n -s -t -T -v]
+cp t.c cc [-c -S -E]
+stdin col [-b -f -h -p -x]
+file colcrt [- -2]
+file colrm 2 4 
+two_files comm [-1 -2 -3 -z --check-order --total]
+file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
+stdin csh
+cp t.c ctags [-a -B --globals -I --members --no-members -Q -R -u -v -x]
+file cut [--complement -s -z] -b 1
+stdin dc 
+stdin dd 
+two_files diff [--normal -q -s -e -n -y --left-column --suppress-common-lines -p -F -t -T --suppress-blank-empty]
+stdin ed [-G -l -r -s -v]
+file eqn [-C -N -r -R]
+stdin ex 
+file expand [-i]
+stdin expr
+cp t.f f77 [-static-libgfortran -cpp -C -P]
+stdin find [-P -L -H]
+stdin flex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
+file fmt [-c -s -t -u]
+file fold [-b -s]
+stdin ftp [-4 -6 -p -i -n -e -g -v -d]
+cp t.c gcc [-c -S -E -g]
+stdin gdb [-write -nh -nx -quiet -batch -fullname]
+stdin grep a [-P -i -v -w -x -L -l -o -q -s -H -h -n -u -Z -a -I -r -R -U -Z]
+file groff [-e -k -l -N -p -s -S -t -U -z -Z -a -b -c -C -E]
+stdin head [-q -v -z]
+two_files join [-i --check-order --nocheck-order --header -z]
+stdin latex 
+file lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
+file look a [-b -d -f]
+file m4 [-E -P -Q -s -g]
+stdin mail -s "subject" avengerzmx@outlook.com < 
+file make [-B -d -e -i -k -L -n -p -q -r -R -s -S -t -w] -f 
+stdin more [-d -l -f -p -c -s -u]
+stdin neqn 
+file nm [-a -B --no-demangle -D -g -l -n -v -u --synthetic]
+file nroff [-C -h -c]
+file pic [-C -S -U -n -t -c -z -D]
+file pr [-c -d -F -J -m -r -t -T -v]
+stdin ptx [-A -G -R -f -r -t]
+file rev 
+two_files sdiff [-i -E -Z -b -W -B --strip-trailing-cr -d -l -s -t -d -H]
+cp tmp sed 's/a/b/' [-n --follow-symlinks --posix -s -u -z]
+stdin sh [-a -C -e -f -n -u -v -x -I -m -s -V -E -b -p]
+cp t.so soelim [-C -r -t]
+stdin sort [-b -g -r]
+stdin spell [-l -n -s -v -x]
+file split [-d -x -e -u]
+file strings [-a -d -f -w]
+cp tmp strip [-s -g --strip-dwo --strip-unneeded -M -p -D -U -w -x -X --keep-file-symbols --only-keep-debug]
+stdin sum [-r -s]
+file tail [-q --retry -z]
+stdin tbl [-C]
+stdin tee [-a -p]
+stdin tex [-file-line-error -no-file-line-error -file-line-error-style -ini -ipc -mltex -recorder -shell-escape -no-shell-escape -src-specials]
+stdin tr a b 
+file troff [-a -b -c -C -E -U -z]
+file tsort
+stdin ul [-i]
+stdin uniq [-c -d -i -u -z]
+file wc [-c -m -l -L -w]
+stdin xargs [-0 -r --show-limits -r]
+file yacc
+file zic [-v -s]
