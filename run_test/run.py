@@ -165,6 +165,10 @@ def run_file(final_cmd, utility_name, log_writer, options_sampled_from_pool, tes
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
+  except KeyboardInterrupt:
+    print("Interrupted")
+    exit()
+
   except(subprocess.TimeoutExpired):
     log_writer.write("%s hung\n" % final_cmd)
 
@@ -191,6 +195,10 @@ def run_stdin(final_cmd, utility_name, log_writer, options_sampled_from_pool, te
 
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
+  except KeyboardInterrupt:
+    print("Interrupted")
+    exit()
 
   except(subprocess.TimeoutExpired):
     log_writer.write("%s hung\n" % final_cmd)
@@ -222,6 +230,10 @@ def run_cp(final_cmd, utility_name, new_file_name, log_writer, options_sampled_f
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
+  except KeyboardInterrupt:
+    print("Interrupted")
+    exit()
+
   except(subprocess.TimeoutExpired):
     log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
@@ -249,6 +261,10 @@ def run_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool
 
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
+  except KeyboardInterrupt:
+    print("Interrupted")
+    exit()
 
   except(subprocess.TimeoutExpired):
     log_writer.write("%s hung\n" % final_cmd)
@@ -299,6 +315,10 @@ def run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, test
 
   try:
     retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
+  except KeyboardInterrupt:
+    print("Interrupted")
+    exit()
 
   except(subprocess.TimeoutExpired):
     log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
