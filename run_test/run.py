@@ -261,7 +261,7 @@ def run_cp(final_cmd, utility_name, new_file_name, log_writer, options_sampled_f
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
-    break
+    # break
 
   else:
     # check return value, record exit code with special meaning
@@ -293,7 +293,7 @@ def run_two_files(final_cmd, utility_name, log_writer, options_sampled_from_pool
 
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
-    break
+    # break
 
   else:
     # check return value, record exit code with special meaning
@@ -348,7 +348,7 @@ def run_pty(final_cmd, utility_name, log_writer, options_sampled_from_pool, test
   # killed by python script because of timeout
   except(FileNotFoundError):
     log_writer.write("%s not found\n" % utility_name)
-    break
+    # break
 
   else:
     # killed by built-in timer of ptyjig because of timeout
