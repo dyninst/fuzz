@@ -11,11 +11,13 @@ import subprocess
 import sys
 import random
 import getopt
+import re
 
 # define variables
+
+# return_value is the lowest return value with special meaning
 return_value = 126
 float_rand = 0.5
-index_num = 2
 arg_num = 6
 
 # redirect the output to /dev/null, otherwise the shell will be overwhelmed by outputs
@@ -37,7 +39,7 @@ def line_commented(line):
   return line.startswith("//")
 
 
-def line_syntax_error(line):
+def line_syntax_valid(line):
   if(not line.startswith("//") \
     and not line.startswith("file ") \
     and not line.startswith("stdin ") \
@@ -45,31 +47,36 @@ def line_syntax_error(line):
     and not line.startswith("two_files ") \
     and not line.startswith("pty ")
     ):
-    return True
-
-  # if specify option pool, there should be two "#"s
-  l = line.split("#")
-  if(len(l) == 2 or len(l) > 3):
-    return True
-
-  return False
-
-
-def have_option_pool(line):
-  l = line.split("#")
-  if(len(l) == 1):
     return False
-  else:
-    return True
+
+  # if specify option pool, there should be a pair of []
+  if(line.count("[") > 0 or line.count("]") > 0):
+    if(line.count("[") != 1 or line.count("]") != 1):
+      return False
+    # if [ is on the right of ]
+    elif(line.find("[") > line.find("]")):
+      return False
+  
+  return True
 
 def get_options_from_pool(option_part_of_line):
-  l = line.split("#")
-  return l[1]
+  # keep characters on the left of [ and characters on the right of ]
+  idx_left = line.find("[")
+  idx_right = line.find("]")
+  if(idx_left > 0):
+    return line[idx_left+1: idx_right]
+  else:
+    return ""
 
 # leave a space for randomly selected options
 def get_other_options(option_part_of_line):
-  l = line.split("#")
-  return l[0] + " %s " + l[2]
+  # return string on the left of [ and string on the right of ]
+  idx_left = line.find("[")
+  idx_right = line.find("]")
+  if(idx_left > 0):
+    return line[0: idx_left] + " %s " + line[idx_right+1: ]
+  else:
+    return option_part_of_line + " %s"
 
 def parse_a_line(line):
 
@@ -95,32 +102,18 @@ def parse_a_line(line):
   else:
     utility_name = line.split()[1]
 
-  # check if option pool is specified
-  flag_op = have_option_pool(line)
-
   # get the final_cmd that can be run
   # option_part_of_line is the part behind utility name
   if(test_type == "cp"):
-    if(flag_op):
-      option_part_of_line = line.split(" ", 3)[3]
-    else:
-      option_part_of_line = line.split(" ", 2)[2]
+    option_part_of_line = (line+" ").split(" ", 3)[3]
   else:
-    print(line)
-    if(flag_op):
-      option_part_of_line = line.split(" ", 2)[2]
-    else:
-      option_part_of_line = line.split(" ", 1)[1]
+    option_part_of_line = (line+" ").split(" ", 2)[2]
 
+  print(option_part_of_line)
 
-  all_options_from_pool = ""
-  # leave a space for options from pool
-  other_options = "%s"
-
-  if(flag_op):
-    # get the options in option pool
-    all_options_from_pool = get_options_from_pool(option_part_of_line)
-    other_options = get_other_options(option_part_of_line)
+  # get the options in option pool
+  all_options_from_pool = get_options_from_pool(option_part_of_line)
+  other_options = get_other_options(option_part_of_line)
 
 
   if(test_type == "stdin"):
@@ -155,6 +148,7 @@ def parse_a_line(line):
               + " " + other_options \
               + " < " + new_file_name
 
+  print(final_cmd)
   log_name = "%s.%s" % (utility_name, test_type)
 
   return final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
@@ -346,41 +340,57 @@ if __name__ == "__main__":
   # if the cmd does not finish in timeout(300 by default) seconds, the test result will be considered as a hang
   timeout = 300
 
-  if len(sys.argv) < arg_num:
-     print(usage)
-     sys.exit(2)
+  # too few arguments
+  if(len(sys.argv) < 2):
+    print("too few arguments")
+    print(usage)
+    sys.exit(1)
+  # -h or --help
+  elif(len(sys.argv) == 2 and (sys.argv[1] == "-h" or sys.argv[1] == "--help")):
+    print(usage)
+    sys.exit(1)
 
+  # get configuration_file and check if it exists
   configuration_file = sys.argv[1]
+  if(not os.path.isfile(configuration_file)):
+    print("configuration_file does not exist")
+    print(usage)
+    sys.exit(1)
 
   try:
-    opts, args = getopt.getopt(sys.argv[2:],"hi:o:p:t:",["ifile=", "ofile=", "prefix=", "timeout="])
+    opts, args = getopt.getopt(sys.argv[2:],"i:o:p:t:",["ifile=", "ofile=", "prefix=", "timeout="])
   except getopt.GetoptError as err:
+    print("error on arguments")
     print(usage)
-    sys.exit(2)
+    sys.exit(1)
 
   for opt, arg in opts:
-    if opt in ("-h", "--help"):
-      print(usage)
-      sys.exit(2)
-    elif opt in ("-i", "--ifile"):
+    if(opt in ("-i", "--ifile")):
       test_dir = arg
-    elif opt in ("-o", "--ofile"):
+    elif(opt in ("-o", "--ofile")):
       result_dir = arg
-    elif opt in ("-p", "--prefix"):
+    elif(opt in ("-p", "--prefix")):
       prefix = arg
-    elif opt in ("-t", "--timeout"):
+    elif(opt in ("-t", "--timeout")):
       timeout = int(arg)
 
-  if test_dir == "" or result_dir == "":
+  if not os.path.isdir(test_dir):
+    print("%s is not a directory" % test_dir)
     print(usage)
-    sys.exit(2)
+    sys.exit(1)
+
+  if result_dir == "":
+    print("please provide valid directory for result")
+    print(usage)
+    sys.exit(1)
+
 
   # print out the parameters
-  print("Input file is %s" % test_dir)
-  print("Output file is %s" % result_dir)
-  print("configuration file is %s" % configuration_file)
+  print("Input directory is %s" % test_dir)
+  print("Output directory is %s" % result_dir)
+  print("Configuration file is %s" % configuration_file)
   print("Prefix is %s" % "None" if(prefix == "") else prefix)
-  print("Timeout is %s" % timeout)
+  print("Timeout is %d" % timeout)
 
   # make directory to save output
   if not os.path.exists(result_dir):
@@ -409,9 +419,9 @@ if __name__ == "__main__":
         print("%s" % line)
         continue
 
-      # check syntax err
-      err = line_syntax_error(line)
-      if(err):
+      # check syntax valid
+      valid = line_syntax_valid(line)
+      if(not valid):
         print("invalid syntax: %s" % line)
         with open(os.path.join(result_dir, "err"), "a") as err_writer:
           err_writer.write("invalid syntax: %s\n" % line)
