@@ -111,16 +111,9 @@ def parse_a_line(line):
   else:
     option_part_of_line = (line+" ").split(" ", 2)[2]
 
-  print("line is:", line)
-  print("(line+\" \").split(\" \", 2) is:", (line+" ").split(" ", 2))
-  print("option_part_of_line is:", option_part_of_line)
-
   # get the options in option pool
   all_options_from_pool = get_options_from_pool(option_part_of_line)
   other_options = get_other_options(option_part_of_line)
-
-  print("all_options_from_pool is:", all_options_from_pool)
-  print("other_options is:", other_options)
 
 
   if(test_type == "stdin"):
