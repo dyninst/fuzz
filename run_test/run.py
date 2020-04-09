@@ -178,6 +178,7 @@ def run_file(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -215,6 +216,7 @@ def run_stdin(cmd, utility_name, log_path, all_options_from_pool, testcase_list)
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -256,6 +258,7 @@ def run_cp(cmd, utility_name, new_file_name, log_path, all_options_from_pool, te
       log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -301,6 +304,7 @@ def run_two_files(cmd, utility_name, log_path, all_options_from_pool, testcase_l
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -364,6 +368,7 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
