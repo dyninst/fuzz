@@ -61,24 +61,27 @@ def line_syntax_valid(line):
 
 def get_options_from_pool(option_part_of_line):
   # keep characters on the left of [ and characters on the right of ]
-  idx_left = line.find("[")
-  idx_right = line.find("]")
-  if(idx_left > 0):
-    return line[idx_left+1: idx_right]
+  idx_left = option_part_of_line.find("[")
+  idx_right = option_part_of_line.find("]")
+  if(idx_left >= 0):
+    return option_part_of_line[idx_left+1: idx_right]
   else:
     return ""
 
 # leave a space for randomly selected options
 def get_other_options(option_part_of_line):
   # return string on the left of [ and string on the right of ]
-  idx_left = line.find("[")
-  idx_right = line.find("]")
-  if(idx_left > 0):
-    return line[0: idx_left] + " %s " + line[idx_right+1: ]
+  idx_left = option_part_of_line.find("[")
+  idx_right = option_part_of_line.find("]")
+  if(idx_left >= 0):
+    return option_part_of_line[0: idx_left] + " %s " + option_part_of_line[idx_right+1: ]
   else:
     return option_part_of_line + " %s"
 
 def parse_a_line(line):
+
+  # filter out redundant white space
+  line = " ".join(line.split())
 
   # type is "stdin", "file", "two_files", "cp" or "pty"
   test_type = line.split()[0]
@@ -102,47 +105,51 @@ def parse_a_line(line):
   else:
     utility_name = line.split()[1]
 
-  # get the final_cmd that can be run
   # option_part_of_line is the part behind utility name
   if(test_type == "cp"):
     option_part_of_line = (line+" ").split(" ", 3)[3]
   else:
     option_part_of_line = (line+" ").split(" ", 2)[2]
 
-  print(option_part_of_line)
+  print("line is:", line)
+  print("(line+\" \").split(\" \", 2) is:", (line+" ").split(" ", 2))
+  print("option_part_of_line is:", option_part_of_line)
 
   # get the options in option pool
   all_options_from_pool = get_options_from_pool(option_part_of_line)
   other_options = get_other_options(option_part_of_line)
 
+  print("all_options_from_pool is:", all_options_from_pool)
+  print("other_options is:", other_options)
+
 
   if(test_type == "stdin"):
     # leave a space for testcase
-    final_cmd = utility_name \
+    cmd = utility_name \
               + " " + other_options \
               + " < " + "%s" 
 
   elif(test_type == "file"):
     # leave a space for testcase
-    final_cmd = utility_name \
+    cmd = utility_name \
               + " " + other_options \
               + " " + "%s"
 
   elif(test_type == "cp"):
-    final_cmd = utility_name \
+    cmd = utility_name \
               + " " + other_options \
               + " " + new_file_name
 
   elif(test_type == "two_files"):
     # leave two space for testcases
-    final_cmd = utility_name \
+    cmd = utility_name \
               + " " + other_options \
               + " " + "%s" \
               + " " + "%s"
 
   elif(test_type == "pty"):
     # -d delay will be set in run_pty
-    final_cmd = ptyjig_path \
+    cmd = ptyjig_path \
               + " " + "-d" + " " + "%g" \
               + " " + utility_name \
               + " " + other_options \
@@ -150,7 +157,7 @@ def parse_a_line(line):
 
   log_name = "%s.%s" % (utility_name, test_type)
 
-  return final_cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
+  return cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
 
 # run "file"
 def run_file(cmd, utility_name, log_path, all_options_from_pool, testcase_list): 
