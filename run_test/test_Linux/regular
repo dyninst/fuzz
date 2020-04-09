@@ -37,7 +37,7 @@ stdin latex
 file lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
 file look a [-b -d -f]
 file m4 [-E -P -Q -s -g]
-stdin mail -s "subject" avengerzmx@outlook.com < 
+//stdin mail -s "subject" avengerzmx@outlook.com < 
 file make [-B -d -e -i -k -L -n -p -q -r -R -s -S -t -w] -f 
 stdin more [-d -l -f -p -c -s -u]
 stdin neqn 
