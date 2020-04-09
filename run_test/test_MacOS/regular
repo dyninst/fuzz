@@ -1,0 +1,73 @@
+file as [-arch_multiple -force_cpusubtype_ALL -dynamic -static -g -W -L -q -static_branch_prediction_Y_bit]
+file awk '{print}'
+stdin bc [-l -w -s -q]
+file bison [-d -g -k -l -n -t] 
+file calendar -f
+file cat [-b -e -n -s -t -u -v]
+cp t.c cc [-E -fsyntax-only -S -c -ansi]
+file checknr [-a -c -f -s]  
+two_files cmp [-b -l]
+stdin col [-b -f -h -p -x]
+file colcrt [- -2]
+stdin colrm 1
+two_files comm [-1 -2 -3 -i]
+cp t compress [-c -f -v]
+file cpp 
+stdin csh [-c -d -e -f -F -n -t -x] 
+file ctags [-a -B -e -F]
+file cut [-n] -b 10
+stdin dc 
+stdin dd 
+two_files diff [-i -E -b -a -p]
+stdin ed [-s -x]
+stdin eqn [-C -N -r -R]
+stdin ex
+stdin expand 
+stdin expr
+file find [-E -H -L -P -X -d -s -x]
+file fmt [-c -m -n -p -s]
+file fold [-b -s]
+cp t.c gcc
+stdin lldb [-w -d -e -x]
+file grep [-a -b -c -E --exclude --exclude-dir -i -J -L -l -n -O -p -q -R -S -s -U -v -w -x] "e" -f
+stdin grn [-C]
+file groff [-e -l -N -p -R -S -s -t -U]
+file head 
+file indent [-bacc -bad -bap -bbb -bc -ncdb -nce -dj -br -lp -st -nut]
+two_files join 
+file look a [-d -f]
+stdin m4 [-E -e -P -Q -s -G]
+file make [-b -B -d -e -i -k -L -p -q -r -R -s -S -t -w] -f
+stdin md5 [-p -q -r]
+file mdls [-name -rawm]
+file mig [-v -L -K -s -MD]
+stdin neqn
+file nm [-a -g -n -p -r -u]
+file nroff [-C -c -p -S -t -U]
+file pic [-C -S -U -n -t -c -z -D]
+file pr 
+file refer [-b -e -n -C -P -R -B -S -k -l]
+file rev
+two_files sdiff [-i -b -W -B -a -l -s -t -d -H]
+cp tmp sed [-E -a -l -n] 's/a/b/'
+stdin sh
+file soelim [-C -r -t]
+file sort [-c -u -s -b]
+file split
+file strings [- -- -a -o]
+file strip [-u -r -i -A -n -S -X -T -N -x -c]
+file sum
+file tail [-q -r]
+file tbl [-C]
+stdin tee [-a]
+stdin tr a b
+file troff [-a -b -c -C -E -R -U] 
+file tsort [u]
+file ul [-i]
+file uniq [-d -i]
+file units [-q]
+file wc [-c -l -m -w]
+stdin xargs [-0]
+file yacc
+file zic [-D -v -s]
+stdin zsh
