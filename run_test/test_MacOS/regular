@@ -1,4 +1,4 @@
-file as [-arch_multiple -force_cpusubtype_ALL -dynamic -static -g -W -L -q -static_branch_prediction_Y_bit]
+file as [-dynamic -static -g -W -q]
 file awk '{print}'
 stdin bc [-l -w -s -q]
 file bison [-d -g -k -l -n -t] 
@@ -33,7 +33,7 @@ file grep [-a -b -c -E --exclude --exclude-dir -i -J -L -l -n -O -p -q -R -S -s 
 stdin grn [-C]
 file groff [-e -l -N -p -R -S -s -t -U]
 file head 
-file indent [-bacc -bad -bap -bbb -bc -ncdb -nce -dj -br -lp -st -nut]
+stdin indent [-bacc -bad -bap -bbb -bc -ncdb -nce -dj -br -lp -nut] -st 
 two_files join 
 file look a [-d -f]
 stdin m4 [-E -e -P -Q -s -G]

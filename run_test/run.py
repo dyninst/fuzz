@@ -12,6 +12,7 @@ import sys
 import random
 import getopt
 import re
+import datetime
 
 # define variables
 
@@ -186,6 +187,7 @@ def run_file(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -224,6 +226,7 @@ def run_stdin(cmd, utility_name, log_path, all_options_from_pool, testcase_list)
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -269,6 +272,7 @@ def run_cp(cmd, utility_name, new_file_name, log_path, all_options_from_pool, te
     finally:
       subprocess.call("rm %s" % new_file_name, shell=True)
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -312,6 +316,7 @@ def run_two_files(cmd, utility_name, log_path, all_options_from_pool, testcase_l
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -383,6 +388,7 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     finally:
       subprocess.call("rm tmp", shell=True)
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
