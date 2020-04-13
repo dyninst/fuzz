@@ -358,13 +358,14 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
 
     # htop needs to be fed input slowly, otherwise it can't quit
     if(utility_name == "htop"):
-
       final_cmd = cmd % (0.05, options_sampled_from_pool)
+    elif(utility_name == "top"):
+      final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
       final_cmd = cmd % (0.001, options_sampled_from_pool)
 
     # print final_cmd to stdin
-    print("running: %s" % final_cmd)
+    print("running: %s, test case: %s" % (final_cmd, testcase))
 
     try:
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
