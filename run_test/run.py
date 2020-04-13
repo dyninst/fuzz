@@ -149,7 +149,7 @@ def parse_a_line(line):
               + " " + other_options \
               + " < " + new_file_name
 
-  log_name = "%s.%s" % (utility_name, test_type)
+  log_name = "%s.%s" % (os.path.basename(utility_name), test_type)
 
   return cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
 
