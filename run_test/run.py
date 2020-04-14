@@ -12,6 +12,7 @@ import sys
 import random
 import getopt
 import re
+import datetime
 
 # define variables
 
@@ -148,7 +149,7 @@ def parse_a_line(line):
               + " " + other_options \
               + " < " + new_file_name
 
-  log_name = "%s.%s" % (utility_name, test_type)
+  log_name = "%s.%s" % (os.path.basename(utility_name), test_type)
 
   return cmd, test_type, utility_name, new_file_name, all_options_from_pool, log_name
 
@@ -178,6 +179,7 @@ def run_file(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -185,6 +187,7 @@ def run_file(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -215,6 +218,7 @@ def run_stdin(cmd, utility_name, log_path, all_options_from_pool, testcase_list)
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -222,6 +226,7 @@ def run_stdin(cmd, utility_name, log_path, all_options_from_pool, testcase_list)
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -256,6 +261,7 @@ def run_cp(cmd, utility_name, new_file_name, log_path, all_options_from_pool, te
       log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -266,6 +272,7 @@ def run_cp(cmd, utility_name, new_file_name, log_path, all_options_from_pool, te
     finally:
       subprocess.call("rm %s" % new_file_name, shell=True)
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -301,6 +308,7 @@ def run_two_files(cmd, utility_name, log_path, all_options_from_pool, testcase_l
       log_writer.write("%s hung\n" % final_cmd)
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -308,6 +316,7 @@ def run_two_files(cmd, utility_name, log_path, all_options_from_pool, testcase_l
       if retcode >= return_value or retcode < 0:
         log_writer.write("%s failed, error: %d\n" % (final_cmd, retcode))
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)
@@ -349,13 +358,14 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
 
     # htop needs to be fed input slowly, otherwise it can't quit
     if(utility_name == "htop"):
-
       final_cmd = cmd % (0.05, options_sampled_from_pool)
+    elif(utility_name == "top"):
+      final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
       final_cmd = cmd % (0.001, options_sampled_from_pool)
 
     # print final_cmd to stdin
-    print("running: %s" % final_cmd)
+    print("running: %s, test case: %s" % (final_cmd, testcase))
 
     try:
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
@@ -364,6 +374,7 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       log_writer.write("%s hung, testcase is %s\n" % (final_cmd, testcase))
 
     else:
+      print("retcode is %d" % retcode)
       if(retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
@@ -378,6 +389,7 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     finally:
       subprocess.call("rm tmp", shell=True)
 
+  log_writer.write("%s\n" % datetime.datetime.now())
   log_writer.write("finished\n")
   log_writer.close()
   print("finished: %s" % line)

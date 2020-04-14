@@ -735,7 +735,7 @@ int main(int argc, char** argv) {
   }
 
 
-  // Now, argv better point to a command 
+  // Now, argv point to a command 
   if(!argv[1]) {
     usage();
   }
