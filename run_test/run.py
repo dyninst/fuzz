@@ -342,11 +342,15 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     # copy test case to tmp and append the designed end file 
     subprocess.call("cat %s ./end/end_%s > tmp" % (testcase, utility_name), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
 
-    # remove all ^z in tmp
     fr = open("tmp", "rb")
     s = fr.read()
     fr.close()
+    # remove all ^z in tmp
     s = s.replace(b"\x1a", b"")
+    # remove all ^c in tmp
+    s = s.replace(b"\x03", b"")
+    # remove all ^\ in tmp
+    s = s.replace(b"\x1c", b"")
 
     # Z or z will suspend telnet 
     if(utility_name == "telnet"):
