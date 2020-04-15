@@ -1,0 +1,70 @@
+file as [-a -D -g -J -L -R -w -Z]
+file awk '{print}'
+stdin bc [-c -l]
+file bison [-u -y -t --location -l -k]
+file calendar [-a -d] -f
+file cat [-b -e -l -n -s -t -u -v] 
+cp t.c cc [-E -S -c -ansi -ObjC -trigraphs -fmath-errno -fblocks -fwritable-strings -g -ftrapv]
+file checknr [-a -c -f -s]
+two_files cmp [-h -l -x -z]
+stdin col [-b -f -h -p -x]
+stdin colcrt [- -2]
+stdin colrm
+two_files comm [-1 -2 -3 -i]
+cp t compress [-c -f -v]
+file ctags [-B -F -T -a -d -f -u -w -x]
+file cut -f 1 [-s -w]
+stdin dc [-x]
+stdin dd 
+two_files diff [-i -E -b -w -B --strip-trailing-cr -a -p -q -e --normal -n -y --left-column]
+stdin ed [-s]
+stdin eqn [-C -N -r -R]
+stdin expand 
+stdin expr 
+stdin find [-E -H -X -d -s -x]
+stdin flex
+stdin fmt [-c -m -n -p -s]
+stdin fold [-b -s]
+cp t.c gcc
+stdin gdb [-n -q -batch -f]
+stdin grep a [-a -b -c -F -P -G -H -h -I -i -L -l]
+stdin grn [-C]
+file groff [-e -g -G -l -L -N -p -R -s -S -t -U -V -X -z -Z -a -b -c -C -e]
+stdin head
+stdin indent [-bacc -bad -bap -bbb -bc -bl -ncdb -nce -dj -nei -eei -nfbs -st -troff]
+two_files join
+file look [-d -f] a
+stdin m4 [-g -P -s]
+file mail -s "subject" avergerzmx@outlook.com < 
+file make [-B -e -i -k -n -N -q -r -s -t -W -w -X] -f
+file md5 [-q -r -t]
+stdin neqn 
+file nm [--debug-syms --defined-only --line-numbers --no-demangle --no-sort]
+file nroff
+stdin pic [-C -S -U -n -t -c -z -D]
+stdin pr [--d -F -r -t]
+file refer [-b -e -n -C -P -S -k -l -B -R]
+stdin rev 
+two_files sdiff [-l -s -a -b -d -i -t]
+stdin sed '-s/a/b/' [-E -a -l -n -r -u]
+stdin soelim [-C]
+file sort [-c -m -u -s -b -d -f -g -h -i]
+cp t split [-d] -n 10
+stdin strings [-a -f]
+cp t strip [-g -p -s -w -x -X]
+stdin sum 
+stdin tail [-F -q]
+stdin tbl [-C]
+stdin tee 
+stdin tr a b 
+stdin troff [-a -b -c -C -E -R -U -z]
+stdin tsort [-d]
+stdin ul [-i]
+stdin unexpand [-a]
+stdin uniq [-c -d -u -i]
+stdin units [-e -q -t]
+stdin vgrind - [-W -f -l -n -t -x]
+stdin wc [-L -c -l -m -w]
+stdin xargs [-0 -r -t]
+file yacc [-B -d -g -i -l -L -P -r -s -t -v]
+file zic [-D -v -s]

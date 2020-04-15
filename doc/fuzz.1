@@ -1,132 +1,66 @@
+FUZZ(1)                                                                FUZZ(1)
 
 
 
-FUZZ(1)                  USER COMMANDS                    FUZZ(1)
+NNAAMMEE
+       fuzz - random character generator
 
+SSYYNNOOPPSSIISS
+       ffuuzzzz length [ option ] ...
 
+DDEESSCCRRIIPPTTIIOONN
+       The main purpose of _f_u_z_z is to test the robustness of system utilities.
+       We use _f_u_z_z to generate random characters. These are then  piped  to  a
+       system utility (using _p_t_y_j_i_g_(_1_) if necessary.)  If the utility crashes,
+       the saved input and output streams can then be analyzed to decide  what
+       sorts of input cause problems.
 
-NAME
-     fuzz - random character generator
+       _L_e_n_g_t_h  is  taken  to  be  the  length of the output stream, usually in
+       bytes, When --ll is selected it the length is in number of strings.
 
-SYNOPSIS
-     fuzz length [ option ] ...
+       The following options can be specified.
 
-DESCRIPTION
-     The main purpose of _f_u_z_z is to test the robustness of system
-     utilities.  We use _f_u_z_z to generate random characters. These
-     are then piped to  a  system  utility  (using  _p_t_y_j_i_g(_1)  if
-     necessary.) If the utility crashes, the saved input and out-
-     put streams can then be analyzed to  decide  what  sorts  of
-     input cause problems.
+       --00     Include NULL (ASCII 0) characters
 
-     _L_e_n_g_t_h is taken to be the length of the output stream,  usu-
-     ally  in  bytes,  When  -l  is  selected it the length is in
-     number of strings.
+       --aa     Include all ASCII characters except NULL (default)
 
-     The following options can be specified.
+       --dd _d_e_l_a_y
+              Specify a delay in seconds between each character.
 
-     -0   Include NULL (ASCII 0) characters
+       --ee _s_t_r_i_n_g
+              Send _s_t_r_i_n_g after all the characters. This feature can  be  used
+              to  send  termination  strings  to the test programs. Standard C
+              escape sequences can be used.
 
-     -a   Include all ASCII characters except NULL (default)
+       --ll _[_l_e_n_]
+              Generate random length strings.  If  _l_e_n  is  specified,  it  is
+              taken  to  be the maximum length of each string (default = 255).
+              Strings are terminated with the ASCII newline character.
 
-     -d _d_e_l_a_y
-          Specify a delay in seconds between each character.
+       --oo _f_i_l_e
+              Store the output stream to _f_i_l_e as well as sending them to  _s_t_d_-
+              _o_u_t.
 
-     -e _s_t_r_i_n_g
-          Send _s_t_r_i_n_g after all the characters. This feature  can
-          be  used  to  send termination strings to the test pro-
-          grams. Standard C escape sequences can be used.
+       --pp     Generate printable ASCII characters only
 
-     -l [_l_e_n]
-          Generate random length strings. If _l_e_n is specified, it
-          is  taken  to  be  the  maximum  length  of each string
-          (default = 255).  Strings are terminated with the ASCII
-          newline character.
+       --rr _f_i_l_e
+              Replay characters stored in _f_i_l_e.
 
-     -o _f_i_l_e
-          Store the output stream to _f_i_l_e as well as sending them
-          to _s_t_d_o_u_t.
+       --ss _s_e_e_d
+              Use _s_e_e_d as the seed to the random number generator.
 
-     -p   Generate printable ASCII characters only
+       --mm _m_o_d_u_l_u_s
+              Use  _m_o_d_u_l_u_s  to restrict the range of random seed to 0 to _m_o_d_u_-
+              _l_u_s_-_1.
 
-     -r _f_i_l_e
-          Replay characters stored in _f_i_l_e.
+       --xx     Print the seed as the first line of stdout.
 
-     -s _s_e_e_d
-          Use _s_e_e_d as the seed to the random number generator.
+AAUUTTHHOORRSS
+       Lars Fredriksen, Bryan So.
 
-     -x   Print the seed as the first line of stdout.
+SSEEEE AALLSSOO
+       ptyjig(1)
 
 
 
-
-Sun Release 4.0   Last change: December 1, 1988                 1
-
-
-
-
-
-
-FUZZ(1)                  USER COMMANDS                    FUZZ(1)
-
-
-
-AUTHORS
-     Lars Fredriksen, Bryan So.
-
-SEE ALSO
-     ptyjig(1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Sun Release 4.0   Last change: December 1, 1988                 2
-
-
-
+4th Berkeley Distribution      December 1, 1988                        FUZZ(1)

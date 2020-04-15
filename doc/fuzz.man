@@ -60,6 +60,9 @@ Replay characters stored in \fIfile\fP.
 .BI \-s " seed"
 Use \fIseed\fP as the seed to the random number generator.
 .TP
+.BI \-m " modulus"
+Use \fImodulus\fP to restrict the range of random seed to 0 to \fImodulus-1\fP.
+.TP
 .B \-x 
 Print the seed as the first line of stdout.
 .SH AUTHORS
