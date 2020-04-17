@@ -1,6 +1,6 @@
 file as [-dynamic -static -g -W -q]
 file awk '{print}'
-stdin bc [-l -w -s -q]
+stdin /usr/bin/bc [-l -w -s -q]
 file bison [-d -g -k -l -n -t] 
 file calendar -f
 file cat [-b -e -n -s -t -u -v]
@@ -12,36 +12,38 @@ file colcrt [- -2]
 stdin colrm 1
 two_files comm [-1 -2 -3 -i]
 cp t compress [-c -f -v]
-file cpp 
-stdin csh [-c -d -e -f -F -n -t -x] 
-file ctags [-a -B -e -F]
+// file cpp 
+file /usr/bin/ctags [-B -e -F -R -u -w -x]
 file cut [-n] -b 10
-stdin dc 
+stdin /usr/bin/dc 
 stdin dd 
 two_files diff [-i -E -b -a -p]
 stdin ed [-s -x]
 stdin eqn [-C -N -r -R]
-stdin ex
 stdin expand 
 stdin expr
 file find [-E -H -L -P -X -d -s -x]
+//file flex [-Ca -Ce -Cf -Cm -f -d -b -p -s -T -7 -8 -B -X -L -R --bison-bridge --bison-locations --stdinit]
 file fmt [-c -m -n -p -s]
 file fold [-b -s]
 cp t.c gcc
-stdin lldb [-w -d -e -x]
 file grep [-a -b -c -E --exclude --exclude-dir -i -J -L -l -n -O -p -q -R -S -s -U -v -w -x] "e" -f
 stdin grn [-C]
 file groff [-e -l -N -p -R -S -s -t -U]
 file head 
-stdin indent [-bacc -bad -bap -bbb -bc -ncdb -nce -dj -br -lp -nut] -st 
+// stdin indent [-bacc -bad -bap -bbb -bc -ncdb -nce -dj -br -lp -nut] -st 
 two_files join 
+//stdin latex
+stdin lldb [-w -d -e -x]
 file look a [-d -f]
 stdin m4 [-E -e -P -Q -s -G]
+//stdin mail -s "subject" avengerzmx@outlook.com <
 file make [-b -B -d -e -i -k -L -p -q -r -R -s -S -t -w] -f
 stdin md5 [-p -q -r]
 file mdls [-name -rawm]
 file mig [-v -L -K -s -MD]
-stdin neqn
+stdin more [-a -A -B -c -C -d -e -E -f -F -g -G -i -I]
+//stdin neqn
 file nm [-a -g -n -p -r -u]
 file nroff [-C -c -p -S -t -U]
 file pic [-C -S -U -n -t -c -z -D]
@@ -50,7 +52,6 @@ file refer [-b -e -n -C -P -R -B -S -k -l]
 file rev
 two_files sdiff [-i -b -W -B -a -l -s -t -d -H]
 cp tmp sed [-E -a -l -n] 's/a/b/'
-stdin sh
 file soelim [-C -r -t]
 file sort [-c -u -s -b]
 file split
@@ -60,6 +61,7 @@ file sum
 file tail [-q -r]
 file tbl [-C]
 stdin tee [-a]
+stdin tex [-enc -file-line-error -file-line-error-style -ini -ipc -ipc-start -mltex -parse-first-line -recorder -shell-escape -src-specials]
 stdin tr a b
 file troff [-a -b -c -C -E -R -U] 
 file tsort [u]
@@ -70,4 +72,3 @@ file wc [-c -l -m -w]
 stdin xargs [-0]
 file yacc
 file zic [-D -v -s]
-stdin zsh
