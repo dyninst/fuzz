@@ -14,7 +14,7 @@
  *  Fuzz generator
  *
  *  Usage: fuzz [-0] [-a] [-d delay] [-o file] [-r file] [-l [lll]] 
- *              [-p] [-s sss] [-e epilog] [-x] [n]
+ *              [-p] [-s sss] [-e epilog] [-x] [-m mmm] [n]
  *
  *  Generate n random characters to output.
  *
@@ -44,6 +44,9 @@
  *     -e    send "epilog" after all random characters
  *
  *     -x    print the random seed as the first line
+ *     
+ *     -m    use mmm as modulus when generating random seed, i.e., the seed
+ *           will be number from 0 to mmm-1
  *
  *  Defaults:
  *           fuzz -a 
@@ -55,7 +58,7 @@
  *
  *  Updated by:
  *
- *  	Mengxiao Zhang, Emma He
+ *  	Bart Miller, Mengxiao Zhang, Emma He
  */
 
 static char *progname = "fuzz";
@@ -87,6 +90,8 @@ int     flagx = 0;
 int     flago = 0;
 int     flagr = 0;
 int     length = 0;
+int     flagm = 0;
+int     modulus = 0;
 char    epilog[1024];
 char   *infile, *outfile;
 FILE   *in, *out;
@@ -154,6 +159,12 @@ int main(int argc, char** argv)
 		    if (sscanf(*argv, "%d", &seed) != 1)
 			 usage();
 		    break;
+	       case 'm':
+		    argv++;
+		    flagm = 1;
+		    if (sscanf(*argv, "%d", &modulus) != 1)
+			 usage();
+		    break;
 	       case 'e':
 		    argv++;
 		    flage = 1;
@@ -193,7 +204,8 @@ int main(int argc, char** argv)
 void usage()
 {
      puts("Usage: fuzz [-x] [-0] [-a] [-l [strlen]] [-p] [-o outfile]");
-     puts("            [-r infile] [-d delay] [-s seed] [-e \"epilog\"] [len]");
+     puts("            [-m [modulus] [-r infile] [-d delay] [-s seed]");
+     puts("            [-e \"epilog\"] [len]");
      exit(1);
 }
 
@@ -209,14 +221,19 @@ void init()
       * Init random numbers 
       */
      if (!flags){
-          // use current time for random seed
-	  seed = (int)time(&now);
+	  // if no seed specified, use current time for random seed
+          seed = (int)time(&now);
+     }
+
+     // if -m is set, restrict the seed value
+     if (flagm){
+	  seed = seed % modulus;
      }
 
      srand(seed);
 
      /*
-      * Random length if necessary 
+      * Random line length if necessary 
       */
      if (!flagn)
 	  length = rand() % 100000;
