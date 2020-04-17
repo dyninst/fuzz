@@ -1,3 +1,4 @@
+pty top
 pty htop
 pty vim
 pty telnet
@@ -5,3 +6,4 @@ pty ex
 pty ftp
 pty csh
 pty zsh
+pty sh
