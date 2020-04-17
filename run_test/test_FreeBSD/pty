@@ -1,9 +1,9 @@
-pty top
-pty htop
-pty vim
-pty telnet
-pty ex
-pty ftp
-pty csh
-pty zsh
-pty sh
+pty top [-C -S -I]
+pty htop [-C -s -t]
+pty vim [-A -b -C]
+pty telnet [-4 -6 -8 -E -N]
+pty ex [-F -R -r]
+pty ftp [-4 -6 -a -f]
+pty csh [-e -f]
+pty zsh 
+pty sh [-a -b -C -p]
