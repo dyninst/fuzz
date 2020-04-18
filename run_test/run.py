@@ -351,6 +351,10 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     s = s.replace(b"\x03", b"")
     # remove all ^\ in tmp
     s = s.replace(b"\x1c", b"")
+    # remove all \x9a in tmp
+    s = s.replace(b"\x9a", b"")
+    # remove all \xc0 in tmp
+    s = s.replace(b"\xc0", b"")
 
     # Z or z will suspend telnet 
     if(utility_name == "telnet"):
@@ -362,7 +366,7 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
 
     # htop needs to be fed input slowly, otherwise it can't quit
     if(utility_name == "htop"):
-      final_cmd = cmd % (0.05, options_sampled_from_pool)
+      final_cmd = cmd % (0.01, options_sampled_from_pool)
     elif(utility_name == "top"):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
