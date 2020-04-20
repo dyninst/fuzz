@@ -219,7 +219,7 @@ def run_stdin(cmd, utility_name, log_path, all_options_from_pool, testcase_list)
 
     else:
       print("retcode is %d" % retcode)
-      if(retcode == 127):
+      if(utility_name not in ("sh", "csh", "zsh") and retcode == 127):
         log_writer.write("%s not found\n" % utility_name)
         break
       # check return value, record exit code with special meaning
