@@ -375,6 +375,12 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     # print final_cmd to stdin
     print("running: %s, test case: %s" % (final_cmd, testcase))
 
+    # debug
+    f = open("log", "w")
+    f.write("running: %s, current test case: %s" % (final_cmd, testcase))
+    f.close()
+    # debug
+
     try:
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
