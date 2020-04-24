@@ -1,0 +1,8 @@
+pty telnet [-4 -6 -8 -E -L -a -d -r]
+pty ex [-A -b -C]
+pty csh [-c -e]
+pty zsh 
+pty sh
+pty vim [-A -b]
+pty top [-a -d -e -F]
+//pty htop [-C]
