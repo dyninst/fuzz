@@ -3,7 +3,7 @@ file awk '{print}'
 stdin bc [-l -w -s -q]
 file bison [-y -t --locations -l -k -d -v]
 file calendar [-a -b -w] -f 
-stdin cat [-A -b -e -n -s -t -T -v]
+stdin cat [-A -b -E -n -s -t -T -v]
 cp t.c cc [-c -S -E]
 stdin col [-b -f -h -p -x]
 file colcrt [- -2]
@@ -12,7 +12,7 @@ two_files comm [-1 -2 -3 -z --check-order --total]
 file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
 stdin csh
 cp t.c ctags [-a -B --globals -I --members --no-members -Q -R -u -v -x]
-file cut [--complement -s -z] -b 1
+file cut [--complement -z] -b 1
 stdin dc 
 stdin dd 
 two_files diff [--normal -q -s -e -n -y --left-column --suppress-common-lines -p -F -t -T --suppress-blank-empty]
@@ -39,6 +39,7 @@ file look a [-b -d -f]
 file m4 [-E -P -Q -s -g]
 //stdin mail -s "subject" avengerzmx@outlook.com < 
 file make [-B -d -e -i -k -L -n -p -q -r -R -s -S -t -w] -f 
+file md5sum [-b --tag -z]
 stdin more [-d -l -f -p -c -s -u]
 stdin neqn 
 file nm [-a -B --no-demangle -D -g -l -n -v -u --synthetic]
