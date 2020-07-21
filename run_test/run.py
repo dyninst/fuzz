@@ -25,6 +25,8 @@ arg_num = 6
 fnull = open(os.devnull, 'w')
 ptyjig_path = "../src/ptyjig"
 
+first_file_for_more = ""
+
 usage = "Usage: python3 run.py configuration_file [-i inputfile] [-p prefix] [-t timeout] [-o outputfile]"
 
 # return a random subset of s, each element has 0.5 probability
@@ -143,11 +145,22 @@ def parse_a_line(line):
 
   elif(test_type == "pty"):
     # -d delay will be set in run_pty
-    cmd = ptyjig_path \
+
+    # more is special, it requires two files. The first file is the file to operate on, the second file provides random control sequence. Before the testing, copy one big test case to /tmp/tmp as the first file.
+    if(utility_name == "more"):
+        cmd = ptyjig_path \
+              + " " + "-d" + " " + "%g" \
+              + " " + utility_name \
+              + " " + other_options \
+              + " " + "/tmp/tmp" \
+              + " < " + new_file_name
+    else:
+        cmd = ptyjig_path \
               + " " + "-d" + " " + "%g" \
               + " " + utility_name \
               + " " + other_options \
               + " < " + new_file_name
+
 
   log_name = "%s.%s" % (os.path.basename(utility_name), test_type)
 
@@ -371,6 +384,11 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
       final_cmd = cmd % (0.001, options_sampled_from_pool)
+
+    # more needs two files, one file provides random control sequence, another file is the file to read
+    if(utility_name == "more"):
+      subprocess.call(["cp %s /tmp/tmp" % first_file_for_more], shell=True)
+    
 
     # print final_cmd to stdin
     print("running: %s, test case: %s" % (final_cmd, testcase))
