@@ -57,6 +57,7 @@
  *
  */
 
+// For more debug info, define DEBUG, or define DEBUG_off to suppress it.
 #define DEBUG_off
 
 // detect the operating system
@@ -95,22 +96,14 @@ char *ptsname(int fd);
 int ptsname_r(int fd, char *buf, size_t buflen);
 
 #ifdef LINUX
-#include <sys/termios.h>
+#include <termios.h>
 #endif
 
 
 /* GLOBAL VARIABLES */
-#define CHILD     0
-#define O_CBREAK  0x00000002
+#define CHILD 0
 #define TRUE  1
 #define FALSE 0
-
-#ifdef LINUX
-#define ECHO      0000010
-#define RAW       040
-#define CRMOD     020
-#define CBREAK    O_CBREAK
-#endif
 
 char     flage = TRUE;
 int      flags = FALSE;
@@ -385,7 +378,12 @@ void setup_pty() {
 
 // Opens the slave device. 
 void setup_tty() {
-  tty = open(ptsname(pty), O_RDWR);
+  char* name_of_slave = ptsname(pty);
+  if(name_of_slave == NULL) {
+    perror("fail to open slave device\n");
+    exit(1);
+  }
+  tty = open(name_of_slave, O_RDWR);
   if(tty < 0) {
     perror(ttyNameUsed);
     exit(1);
