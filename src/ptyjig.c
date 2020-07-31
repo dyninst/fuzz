@@ -134,6 +134,9 @@ int   pty = -1;
 char  ttyNameUsed[40];
 char* progname;
 
+// return value of dup or dup2
+int ret;
+
 // for more verbose output at the end of execution
 // makes reason for dying more obvious
 struct  mesg {
@@ -411,16 +414,40 @@ void execute(char** cmd) {
   if(execPID == CHILD) {
     // save copies in case exec fails
     fstdin  = dup(0);
+    if(fstdin < 0) {
+      printf("error %d on fstdin = dup(0)\n", errno);
+      exit(1);
+    }
     fstdout = dup(1);
+    if(fstdout < 0) {
+      printf("error %d on fstdout = dup(1)\n", errno);
+      exit(1);
+    }
     fstderr = dup(2); 
+    if(fstderr < 0) {
+      printf("error %d on fstderr = dup(2)\n", errno);
+      exit(1);
+    }
 
     setup_tty();
     // copy tty to stdin  
-    dup2(tty, 0);        
+    ret = dup2(tty, 0);        
+    if(ret < 0) {
+      printf("error %d on ret = dup2(tty, 0)\n", errno);
+      exit(1);
+    }
     // copy tty to stdout  
-    dup2(tty, 1);        
+    ret = dup2(tty, 1);        
+    if(ret < 0) {
+      printf("error %d on ret = dup2(tty, 1)\n", errno);
+      exit(1);
+    }
     // copy tty to stderr  
-    dup2(tty, 2);        
+    ret = dup2(tty, 2);        
+    if(ret < 0) {
+      printf("error %d on ret = dup2(tty, 2)\n", errno);
+      exit(1);
+    }
 
     close(tty);
 
@@ -437,9 +464,21 @@ void execute(char** cmd) {
     execvp(cmd[0], cmd);
 
     // IF IT EVER GETS HERE, error when executing "cmd"  
-    dup2(fstdin,  0);
-    dup2(fstdout, 1);
-    dup2(fstderr, 2);
+    ret = dup2(fstdin,  0);
+    if(ret < 0) {
+      printf("error %d on dup2(fstdin, 0)\n", errno);
+      exit(1);
+    }
+    ret = dup2(fstdout, 1);
+    if(ret < 0) {
+      printf("error %d on dup2(fstdout, 1)\n", errno);
+      exit(1);
+    }
+    ret = dup2(fstderr, 2);
+    if(ret < 0) {
+      printf("error %d on dup2(fstderr, 2)\n", errno);
+      exit(1);
+    }
 
     perror(cmd[0]);
 
