@@ -134,7 +134,7 @@ int   pty = -1;
 char  ttyNameUsed[40];
 char* progname;
 
-// return value of dup or dup2
+// return value of functions
 int ret;
 
 // for more verbose output at the end of execution
@@ -188,7 +188,7 @@ int executing = TRUE;
 // Unfix the above and exit when we are done. 
 void done() {
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: in done()\n");
+  printf("ptyjig: in done()\n");
 #endif
 
   // Close output files if opened
@@ -211,7 +211,7 @@ void sigchld(int sig) {
   int status;
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: got signal SIGCHLD\n");
+  printf("ptyjig: got signal SIGCHLD\n");
 #endif
 
   // Guarantee to return since a child is dead
@@ -243,8 +243,8 @@ void sigchld(int sig) {
 
       if(pid != execPID) {
 #ifdef DEBUG
-        fprintf(stderr, "ptyjig: somebody killed my child\n");
-        fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
+        printf("ptyjig: somebody killed my child\n");
+        printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
         // kill the exec too
         kill(execPID, SIGKILL);          
@@ -263,9 +263,9 @@ void sigchld(int sig) {
       }
 
       if(WTERMSIG(status)) {
-        fprintf(stderr,"ptyjig: %s: %s%s\n",progname,
-                 mesg[WTERMSIG(status)].pname,
-                 WCOREDUMP(status) ? " (core dumped)" : "");
+        printf("ptyjig: %s: %s%s\n",progname,
+               mesg[WTERMSIG(status)].pname,
+               WCOREDUMP(status) ? " (core dumped)" : "");
       }
 
       // If process terminates normally, return its retcode
@@ -282,7 +282,7 @@ void sigchld(int sig) {
 // Clean up processes
 void clean() {
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: in clean()\n");
+  printf("ptyjig: in clean()\n");
 #endif
 
   // Not necessary for sigchld to take over
@@ -291,14 +291,14 @@ void clean() {
   // must close files, and kill all running processes
   if(execPID != -1) {
 #ifdef DEBUG
-    fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
+    printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
     kill(execPID, SIGKILL);
   }
 
   if(writerPID != -1) {
 #ifdef DEBUG
-    fprintf(stderr, "ptyjig: killing writerPID = %d\n", writerPID);
+    printf("ptyjig: killing writerPID = %d\n", writerPID);
 #endif
     kill(writerPID, SIGKILL);
   }
@@ -310,8 +310,16 @@ void clean() {
 void sigwinch(int sig) {
   struct winsize ws;
 
-  ioctl(0,   TIOCGWINSZ, &ws);
-  ioctl(pty, TIOCSWINSZ, &ws);
+  ret = ioctl(0,   TIOCGWINSZ, &ws);
+  if (ret < 0) {
+    fprintf(stderr, "Error %d on ioctl(0, TIOCGWINSZ, &ws)\n", errno);
+    exit(1);
+  }
+  ret = ioctl(pty, TIOCSWINSZ, &ws);
+  if (ret < 0) {
+    fprintf(stderr, "Error %d on ioctl(pty, TIOCGWINSZ, &ws)\n", errno);
+    exit(1);
+  }
 
   kill(execPID, SIGWINCH);
 }
@@ -319,7 +327,7 @@ void sigwinch(int sig) {
 // Handle user interrupt SIGINT
 void clean_int(int sig) {
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: got signal SIGINT\n");
+  printf("ptyjig: got signal SIGINT\n");
 #endif
 
   signal(SIGINT, SIG_DFL);
@@ -331,7 +339,7 @@ void clean_int(int sig) {
 // Handle quit signal SIGQUIT
 void clean_quit(int sig) {
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: got signal SIGQUIT\n");
+  printf("ptyjig: got signal SIGQUIT\n");
 #endif
 
   clean();
@@ -342,7 +350,7 @@ void clean_quit(int sig) {
 // Handle user terminate signal SIGTERM
 void clean_term(int sig) {
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: got signal SIGTERM\n");
+  printf("ptyjig: got signal SIGTERM\n");
 #endif
 
   clean();
@@ -353,10 +361,6 @@ void clean_term(int sig) {
 
 // Opens a master pseudo-tty device
 void setup_pty() {
-  char    c;
-  int     i;
-  struct stat stb;
-  int     foundOne = FALSE;
   printf("enter setup_pty\n");
   int rc;
 
@@ -407,7 +411,7 @@ void execute(char** cmd) {
   signal(SIGUSR1, execute_done);
 
   if((execPID = fork()) == -1) {
-    perror("execute(): fork");
+    fprintf(stderr, "Error %d on execPID = fork()\n", errno);
     exit(1);
   }
 
@@ -415,17 +419,17 @@ void execute(char** cmd) {
     // save copies in case exec fails
     fstdin  = dup(0);
     if(fstdin < 0) {
-      printf("error %d on fstdin = dup(0)\n", errno);
+      fprintf(stderr, "Error %d on fstdin = dup(0)\n", errno);
       exit(1);
     }
     fstdout = dup(1);
     if(fstdout < 0) {
-      printf("error %d on fstdout = dup(1)\n", errno);
+      fprintf(stderr, "Error %d on fstdout = dup(1)\n", errno);
       exit(1);
     }
     fstderr = dup(2); 
     if(fstderr < 0) {
-      printf("error %d on fstderr = dup(2)\n", errno);
+      fprintf(stderr, "Error %d on fstderr = dup(2)\n", errno);
       exit(1);
     }
 
@@ -433,19 +437,19 @@ void execute(char** cmd) {
     // copy tty to stdin  
     ret = dup2(tty, 0);        
     if(ret < 0) {
-      printf("error %d on ret = dup2(tty, 0)\n", errno);
+      fprintf(stderr, "Error %d on ret = dup2(tty, 0)\n", errno);
       exit(1);
     }
     // copy tty to stdout  
     ret = dup2(tty, 1);        
     if(ret < 0) {
-      printf("error %d on ret = dup2(tty, 1)\n", errno);
+      fprintf(stderr, "Error %d on ret = dup2(tty, 1)\n", errno);
       exit(1);
     }
     // copy tty to stderr  
     ret = dup2(tty, 2);        
     if(ret < 0) {
-      printf("error %d on ret = dup2(tty, 2)\n", errno);
+      fprintf(stderr, "Error %d on ret = dup2(tty, 2)\n", errno);
       exit(1);
     }
 
@@ -466,17 +470,17 @@ void execute(char** cmd) {
     // IF IT EVER GETS HERE, error when executing "cmd"  
     ret = dup2(fstdin,  0);
     if(ret < 0) {
-      printf("error %d on dup2(fstdin, 0)\n", errno);
+      fprintf(stderr, "Error %d on dup2(fstdin, 0)\n", errno);
       exit(1);
     }
     ret = dup2(fstdout, 1);
     if(ret < 0) {
-      printf("error %d on dup2(fstdout, 1)\n", errno);
+      fprintf(stderr, "Error %d on dup2(fstdout, 1)\n", errno);
       exit(1);
     }
     ret = dup2(fstderr, 2);
     if(ret < 0) {
-      printf("error %d on dup2(fstderr, 2)\n", errno);
+      fprintf(stderr, "Error %d on dup2(fstderr, 2)\n", errno);
       exit(1);
     }
 
@@ -494,7 +498,7 @@ void execute(char** cmd) {
   usleep(flagw);
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: execPID = %d\n", execPID);
+  printf("ptyjig: execPID = %d\n", execPID);
 #endif
 }
 
@@ -504,7 +508,7 @@ void reader_done(int sig) {
   sleep(1);   
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
+  printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
 
   // If it doesn't die on its own, kill it 
@@ -551,7 +555,7 @@ void writer() {
   }
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: writer finished\n");
+  printf("ptyjig: writer finished\n");
 #endif
 
   // tell reader to quit if no more char from exec
@@ -599,7 +603,7 @@ void reader() {
   }
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: reader finished\n");
+  printf("ptyjig: reader finished\n");
 #endif
 
   reader_done(0);
@@ -612,7 +616,7 @@ void doreader() {
 // Fork writer 
 void dowriter() {
   if((writerPID = fork()) == -1) {
-    perror("dowriter(): fork:");
+    fprintf(stderr, "Error %d on writerPID = fork()\n", errno);
     exit(1);
   } 
 
@@ -838,7 +842,7 @@ int main(int argc, char** argv) {
   int pid, status;
 
 #ifdef DEBUG
-  fprintf(stderr, "ptyjig: got signal SIGCHLD\n");
+  printf("ptyjig: got signal SIGCHLD\n");
 #endif
 
   // Guarantee to return since a child is dead 
@@ -870,8 +874,8 @@ int main(int argc, char** argv) {
 
       if(pid != execPID) {
 #ifdef DEBUG
-        fprintf(stderr, "ptyjig: somebody killed my child\n");
-        fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
+        printf("ptyjig: somebody killed my child\n");
+        printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
         // kill the exec too 
         kill(execPID, SIGKILL);          
@@ -890,9 +894,9 @@ int main(int argc, char** argv) {
       }
 
       if(WTERMSIG(status)) {
-        fprintf(stderr,"ptyjig: %s: %s%s\n",progname,
-                 mesg[WTERMSIG(status)].pname,
-                 WCOREDUMP(status) ? " (core dumped)" : "");
+        printf("ptyjig: %s: %s%s\n",progname,
+               mesg[WTERMSIG(status)].pname,
+               WCOREDUMP(status) ? " (core dumped)" : "");
         core = 128 + WTERMSIG(status);
       }
     }
