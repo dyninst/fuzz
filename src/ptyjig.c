@@ -859,7 +859,7 @@ int main(int argc, char** argv) {
             WIFSTOPPED(status),WSTOPSIG(status));
 
 #endif
-    int core = 0;
+    int ret = 0;
     if(WSTOPSIG(status) == SIGTSTP) {
       kill(pid, SIGCONT);
     }
@@ -897,10 +897,10 @@ int main(int argc, char** argv) {
         printf("ptyjig: %s: %s%s\n",progname,
                mesg[WTERMSIG(status)].pname,
                WCOREDUMP(status) ? " (core dumped)" : "");
-        core = 128 + WTERMSIG(status);
+        ret = 128 + WTERMSIG(status);
       }
     }
-    return core;
+    return ret;
   }
 }
 
