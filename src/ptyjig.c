@@ -88,16 +88,13 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <termios.h>
 
 int posix_openpt(int flags);
 int grantpt(int fd);
 int unlockpt(int fd);
 char *ptsname(int fd);
 int ptsname_r(int fd, char *buf, size_t buflen);
-
-#ifdef LINUX
-#include <termios.h>
-#endif
 
 
 /* GLOBAL VARIABLES */
@@ -685,9 +682,8 @@ int main(int argc, char** argv) {
   extern int   optind;
   extern char* optarg;
 
-#ifdef LINUX
-    struct termios termIOSettings;
-#endif
+  struct termios termIOSettings;
+
 #ifdef DEBUG
     printf("main: pid = %d\n",getpid());
 #endif
@@ -813,7 +809,6 @@ int main(int argc, char** argv) {
   // open an arbitrary pseudo-terminal pair 
   setup_pty();
 
-#ifdef LINUX
   // Get Attributes for Master
   tcgetattr(pty, &termIOSettings);
 
@@ -824,7 +819,6 @@ int main(int argc, char** argv) {
 
   // Set Attributes for Master to RAWed version of "termIOSettings"
   (void) tcsetattr(pty, TCSANOW, &termIOSettings);
-#endif
 
   // fork and execute test program with arguments 
   progname = argv[1]; 
