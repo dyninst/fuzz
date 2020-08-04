@@ -146,8 +146,8 @@ def parse_a_line(line):
   elif(test_type == "pty"):
     # -d delay will be set in run_pty
 
-    # more is special, it requires two files. The first file is the file to operate on, the second file provides random control sequence. Before the testing, copy one big test case to /tmp/tmp as the first file.
-    if(utility_name == "more"):
+    # more and less are special, it requires two files. The first file is the file to operate on, the second file provides random control sequence. Before the testing, copy one big test case to /tmp/tmp as the first file.
+    if(utility_name == "more" or utility_name == "less"):
         cmd = ptyjig_path \
               + " " + "-d" + " " + "%g" \
               + " " + utility_name \
@@ -382,11 +382,15 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
     elif(utility_name == "top"):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
+    elif(utility_name == "more"):
+      final_cmd = cmd % (0.01, options_sampled_from_pool)
+    elif(utility_name == "less"):
+      final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
       final_cmd = cmd % (0.001, options_sampled_from_pool)
 
     # more needs two files, one file provides random control sequence, another file is the file to read
-    if(utility_name == "more"):
+    if(utility_name == "more" or utility_name == "less"):
       subprocess.call(["cp %s /tmp/tmp" % first_file_for_more], shell=True)
     
 
