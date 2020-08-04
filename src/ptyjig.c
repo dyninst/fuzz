@@ -433,6 +433,12 @@ void execute(char** cmd) {
       exit(1);
     }
 
+    ret = setsid();
+    if(ret < 0) {
+      fprintf(stderr, "Error %d on ret = setsid()\n", errno);
+      exit(1);
+    }
+
     setup_tty();
     // copy tty to stdin  
     ret = dup2(tty, 0);        
@@ -453,7 +459,9 @@ void execute(char** cmd) {
       exit(1);
     }
 
-    close(tty);
+    if(tty > 2) {
+      close(tty);
+    }
 
     // suppress signals if -s present 
     if(flags) {        

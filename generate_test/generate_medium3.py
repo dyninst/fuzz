@@ -53,36 +53,6 @@ for i in range(start, start+inc):
   subprocess.call(["fuzz", "%d" % n, "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + inc
 
-# -0 + -l
-'''for i in range(start, start+100):
-  print(i)
-  if os.path.isfile(os.path.join(path, "t%d" % i)):
-    continue
-  time.sleep(1.1)
-  l = random.randint(1, 255)
-  subprocess.call(["fuzz", "%d" % n,"-l %d" % l, "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
-start = start + 100
-
-# -a + -l
-for i in range(start, start+100):
-  print(i)
-  if os.path.isfile(os.path.join(path, "t%d" % i)):
-    continue
-  time.sleep(1.1)
-  l = random.randint(1, 255)
-  subprocess.call(["fuzz", "%d" % n,"-l %d" % l, "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
-start = start + 100
-
-# -p + -l
-for i in range(start, start+100):
-  print(i)
-  if os.path.isfile(os.path.join(path, "t%d" % i)):
-    continue
-  time.sleep(1.1)
-  l = random.randint(1, 255)
-  subprocess.call(["fuzz", "%d" % n,"-l %d" % l, "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
-start = start + 100'''
-
 # -0 + -l + 1000
 for i in range(start, start+inc):
   print(i)
