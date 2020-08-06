@@ -25,7 +25,7 @@ arg_num = 6
 fnull = open(os.devnull, 'w')
 ptyjig_path = "../src/ptyjig"
 
-first_file_for_more = "/p/paradyn/papers/fuzz2020/testcases/Large3/t0"
+first_file_for_more = "/p/paradyn/papers/fuzz2020/testcases/Large3/t150"
 
 usage = "Usage: python3 run.py configuration_file [-i inputfile] [-p prefix] [-t timeout] [-o outputfile]"
 
@@ -381,10 +381,6 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     if(utility_name == "htop"):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
     elif(utility_name == "top"):
-      final_cmd = cmd % (0.01, options_sampled_from_pool)
-    elif(utility_name == "more"):
-      final_cmd = cmd % (0.01, options_sampled_from_pool)
-    elif(utility_name == "less"):
       final_cmd = cmd % (0.01, options_sampled_from_pool)
     else:
       final_cmd = cmd % (0.001, options_sampled_from_pool)
