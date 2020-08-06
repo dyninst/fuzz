@@ -373,6 +373,9 @@ def run_pty(cmd, utility_name, log_path, all_options_from_pool, testcase_list):
     if(utility_name == "telnet"):
         s = s.replace(b"Z", b"")
         s = s.replace(b"z", b"")
+    # command F will make less show the file updates in real time, it requires an interrupt to quit.
+    if(utility_name == "less"):
+        s = s.replace(b"F", b"")
     fw = open("tmp", "wb")
     fw.write(s)
     fw.close()
