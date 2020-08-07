@@ -49,7 +49,7 @@
  *
  *  Authors:
  *
- *    Bryan So, Lars Fredriksen
+ *    Bryan So, Lars Fredriksen, Barton P. Miller
  *
  *  Updated by:
  *
@@ -76,6 +76,9 @@
 #define FREEBSD
 #endif
 
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
@@ -140,39 +143,39 @@ struct  mesg {
   char    *iname;
   char    *pname;
 } mesg[] = {
-  0,      0,
-  "HUP",  "Hangup",
-  "INT",  "Interrupt",
-  "QUIT", "Quit",
-  "ILL",  "Illegal instruction",
-  "TRAP", "Trace/BPT trap",
-  "IOT",  "IOT trap",
-  "EMT",  "EMT trap",
-  "FPE",  "Floating exception",
-  "KILL", "Killed",
-  "BUS",  "Bus error",
-  "SEGV", "Segmentation fault",
-  "SYS",  "Bad system call",
-  "PIPE", "Broken pipe",
-  "ALRM", "Alarm clock",
-  "TERM", "Terminated",
-  "URG",  "Urgent I/O condition",
-  "STOP", "Stopped (signal)",
-  "TSTP", "Stopped",
-  "CONT", "Continued",
-  "CHLD", "Child exited",
-  "TTIN", "Stopped (tty input)",
-  "TTOU", "Stopped (tty output)",
-  "IO",   "I/O possible",
-  "XCPU", "Cputime limit exceeded",
-  "XFSZ", "Filesize limit exceeded",
-  "VTALRM","Virtual timer expired",
-  "PROF", "Profiling timer expired",
-  "WINCH","Window size changed",
-  0,      "Signal 29",
-  "USR1", "User defined signal 1",
-  "USR2", "User defined signal 2",
-  0,      "Signal 32"
+  {0,      0},
+  {"HUP",  "Hangup"},
+  {"INT",  "Interrupt"},
+  {"QUIT", "Quit"},
+  {"ILL",  "Illegal instruction"},
+  {"TRAP", "Trace/BPT trap"},
+  {"IOT",  "IOT trap"},
+  {"EMT",  "EMT trap"},
+  {"FPE",  "Floating exception"},
+  {"KILL", "Killed"},
+  {"BUS",  "Bus error"},
+  {"SEGV", "Segmentation fault"},
+  {"SYS",  "Bad system call"},
+  {"PIPE", "Broken pipe"},
+  {"ALRM", "Alarm clock"},
+  {"TERM", "Terminated"},
+  {"URG",  "Urgent I/O condition"},
+  {"STOP", "Stopped (signal)"},
+  {"TSTP", "Stopped"},
+  {"CONT", "Continued"},
+  {"CHLD", "Child exited"},
+  {"TTIN", "Stopped (tty input)"},
+  {"TTOU", "Stopped (tty output)"},
+  {"IO",   "I/O possible"},
+  {"XCPU", "Cputime limit exceeded"},
+  {"XFSZ", "Filesize limit exceeded"},
+  {"VTALRM","Virtual timer expired"},
+  {"PROF", "Profiling timer expired"},
+  {"WINCH","Window size changed"},
+  {0,      "Signal 29"},
+  {"USR1", "User defined signal 1"},
+  {"USR2", "User defined signal 2"},
+  {0,      "Signal 32"}
 };
 
 
@@ -658,12 +661,12 @@ void usage() {
   printf("  Defaults:\n");
   printf("    -i /dev/null -o /dev/null -d 0 -t 2\n\n");
   printf("  Examples:\n\n");
-  printf("     pty -o out -d 0.05 -t 10 vi text1 < text2\n\n");
+  printf("     ptyjig -o out -d 0.05 -t 10 vi text1 < text2\n\n");
   printf("       Starts \"vi text1\" in background, typing the characters\n");
   printf("       in \"text2\" into it with a delay of 0.05 sec between each\n");
   printf("       character, and save the output of \"vi\" to \"out\".\n");
   printf("       Program ends when \"vi\" stops outputting for 10 seconds.\n\n");
-  printf("     pty -i in -o out csh\n\n");
+  printf("     ptyjig -i in -o out csh\n\n");
   printf("       Behaves like \"script out\" except the keystrokes typed by\n");
   printf("       a user are also saved into \"in\".\n");
   printf("  Authors: \n");
