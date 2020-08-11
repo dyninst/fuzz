@@ -8,4 +8,3 @@ pty telnet [-4 -6 -8 -E -L -a -d -r]
 pty top [-a -d -e -F]
 pty vim [-A -b]
 pty zsh 
-
