@@ -60,22 +60,6 @@
 // For more debug info, define DEBUG, or define DEBUG_off to suppress it.
 #define DEBUG_off
 
-// detect the operating system
-// MACOS
-#ifdef __APPLE__
-#define MACOS
-#endif
-
-// LINUX
-#ifdef __linux__
-#define LINUX
-#endif
-
-// FREEBSD
-#ifdef __FreeBSD__
-#define FREEBSD
-#endif
-
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/wait.h>
