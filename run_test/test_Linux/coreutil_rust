@@ -1,0 +1,14 @@
+file ./coreutils_rust/target/debug/cat [-A -b -E -n -s -t -T -v]
+two_files ./coreutils_rust/target/debug/comm [-1 -2 -3]
+file ./coreutils_rust/target/debug/cut [--complement -z] -b 1
+file ./coreutils_rust/target/debug/expand [-i -U]
+file ./coreutils_rust/target/debug/fmt [-c -t -m -s -u -x -q]
+file ./coreutils_rust/target/debug/fold [-b -s]
+file ./coreutils_rust/target/debug/head [-q]
+file ./coreutils_rust/target/debug/ptx [-A -G -R -f -r]
+file ./coreutils_rust/target/debug/sum [-r -s]
+stdin ./coreutils_rust/target/debug/tee [-a]
+stdin ./coreutils_rust/target/debug/tr a b
+file ./coreutils_rust/target/debug/tsort 
+file ./coreutils_rust/target/debug/uniq [-c -d -i -u -z]
+file ./coreutils_rust/target/debug/wc [-c -m -l -L -w]
