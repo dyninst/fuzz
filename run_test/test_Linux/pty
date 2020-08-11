@@ -1,13 +1,12 @@
-//pty bash [-i -l -r -s -v -x]
-//pty csh [-c -e]
+pty bash [-i -l -r -s -v -x]
+pty csh [-c -e]
 pty dash
-//pty ex [-A -b -C]
-//pty ftp [-4 -6 -p -n -e -g -v -d]
-//pty htop [-C]
+pty ex [-A -b -C]
+pty ftp [-4 -6 -p -n -e -g -v -d]
+pty htop [-C]
 pty less [-a -A -B -c -C -d -e -E -f -F -g -G -i -I -J -K -L -m -M -n -N -q -Q -r -R -s -S -u -U -w -W -X --follow-name --mouse --MOUSE --no-keypad --no-histdups --rscroll --save-marks --use-backslash]
-//pty more [-d -l -f -p -s -u]
-//pty telnet [-4 -6 -8 -E -L -a -d -r]
-//pty top [-a -d -e -F]
-//pty vim [-A -b]
-//pty zsh 
-
+pty more [-d -l -f -p -s -u]
+pty telnet [-4 -6 -8 -E -L -a -d -r]
+pty top [-a -d -e -F]
+pty vim [-A -b]
+pty zsh 
