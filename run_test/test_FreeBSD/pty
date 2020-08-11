@@ -1,11 +1,11 @@
 pty bash [-i -l -r -s]
-pty csh [-e -f]
 pty dash
 pty ex [-F -R -r]
 pty ftp [-4 -6 -a -f]
 pty htop [-C -s -t]
 pty less [-a -A -B -c -C -d -e -E -f -F -g -G -i -I -J -K -L -m -M -n -N -q -Q -r -R -s -S -u -U -w -W -X -~ -# --follow-name --no-keypad --use-backslash --rscroll]
 pty sh [-a -b -C -p]
+pty tcsh [-e -f]
 pty telnet [-4 -6 -8 -E -N]
 pty top [-C -S -I]
 pty vim [-A -b -C]
