@@ -1,10 +1,21 @@
-
 In this directory:
-	generate_small.py:
-		python script to generate small files(1200 files with 1,000 characters or 10 lines with up to 100 characters per line)
-	generate_medium.py:
-		python script to generate medium-size files(600 files with 100,000 characters or 1,000 lines with up to 100 characters per line, including the 12 test cases from the 1995 fuzzstudy)
-	generate_large.py:
-		python script to generate big files(180 big files with 10,000,000 characters or 100,000 lines with up to 100 characters per line)
-	generate_huge.py:
-		python script to generate huge files(60 huge files with 100,000,000 characters or 1,000,000 lines with up to 100 characters per line)
+        size and parameters of datasets.xlsx:
+		A xlsx file with the parameters to generate dataset
+
+	generate_small1.py:
+		python script to generate dateset Small1 and Small2
+	generate_medium1.py:
+		python script to generate dateset Medium1 and Medium2
+	generate_large1.py:
+		python script to generate dateset Large1 and Large2
+	generate_huge1.py:
+		python script to generate dateset Huge1 and Huge2
+
+	generate_small3.py:
+		python script to generate dateset Small3
+	generate_medium3.py:
+		python script to generate dateset Medium3
+	generate_large3.py:
+		python script to generate dateset Large3
+	generate_huge3.py:
+		python script to generate dateset Huge3
