@@ -26,7 +26,7 @@
  *  -d specifies a keystroke delay in seconds (floating point accepted.)
  *  -t specifies a timeout interval.  The program will exit if the
  *     standard input is exhausted and "cmd" does not send output
- *     for "ttt" seconds.
+ *     for "ttt" seconds(takes only integers)
  *  -w specifies another delay parameter. The program starts to send
  *     input to "cmd" after "www" seconds.
  *
@@ -38,7 +38,7 @@
  *     pty -o out -d 0.2 -t 10 vi text1 < text2
  *
  *        Starts "vi text1" in background, typing the characters in 
- *        "text2" into it with a delay of 0.2sec between each char-
+ *        "text2" into it with a delay of 0.2 sec between each char-
  *        acter, and save the output by "vi" to "out".  The program
  *        ends when "vi" stops outputting for 10 seconds.
  *
@@ -94,8 +94,8 @@ int      flags = FALSE;
 int      flagx = FALSE;
 int      flagi = FALSE;
 int      flago = FALSE;
-// Timeout interval in useconds
-unsigned flagt = 2 * 1000000;   
+// Timeout interval in seconds
+unsigned flagt = 2;   
 // Starting wait in useconds
 unsigned flagw = FALSE;         
 // Delay between keystrokes in useconds
@@ -231,13 +231,13 @@ void sigchld(int sig) {
         printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
         // kill the exec too
-        kill(execPID, SIGKILL);          
+        kill(-execPID, SIGKILL);          
         // use the same method to suicide
         kill(readerPID, WTERMSIG(status)); 
       }
 
       // Just to make sure it is killed
-      kill(execPID, SIGKILL); 
+      kill(-execPID, SIGKILL); 
 
       if(pid != writerPID && writerPID != -1) {
 #ifdef DEBUG
@@ -277,7 +277,7 @@ void clean() {
 #ifdef DEBUG
     printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
-    kill(execPID, SIGKILL);
+    kill(-execPID, SIGKILL);
   }
 
   if(writerPID != -1) {
@@ -305,7 +305,7 @@ void sigwinch(int sig) {
     exit(1);
   }
 
-  kill(execPID, SIGWINCH);
+  kill(-execPID, SIGWINCH);
 }
 
 // Handle user interrupt SIGINT
@@ -504,13 +504,13 @@ void reader_done(int sig) {
 #endif
 
   // If it doesn't die on its own, kill it 
-  kill(execPID, SIGKILL); 
+  kill(-execPID, SIGKILL); 
 }
 
 // Sets boolean to false to stop writer
 void writer_done(int sig) {
   writing = FALSE;
-  ualarm(flagt, 0);
+  alarm(flagt);
 }
 
 // Read from stdin and send everything character read to "pty".  Record the
@@ -590,7 +590,7 @@ void reader() {
     // seconds and quit.  If during this wait, a character comes from
     // "pty", then the wait is set back. 
     if(!writing) {
-      ualarm(flagt, 0);
+      alarm(flagt);
     }
   }
 
@@ -640,7 +640,7 @@ void usage() {
   printf("    -o FILEOUT  standard output saved to file FILEOUT\n");
   printf("    -d DELAY    use a keystroke delay of DELAY seconds (accepts floating pt)\n");
   printf("    -t TIMEOUT  kill \"cmd\" if stdin exhausted and \"cmd\" doesn't send\n");
-  printf("                output for TIMEOUT seconds\n");
+  printf("                output for TIMEOUT seconds (takes only integer)\n");
   printf("    -w WAIT     wait WAIT seconds before streaming input to \"cmd\"\n\n");
   printf("  Defaults:\n");
   printf("    -i /dev/null -o /dev/null -d 0 -t 2\n\n");
@@ -666,6 +666,7 @@ int main(int argc, char** argv) {
   int     num;
   int     cont;
   float   f;
+  unsigned int t;
   extern int   optind;
   extern char* optarg;
 
@@ -726,7 +727,7 @@ int main(int argc, char** argv) {
           break;
 
         case 't':
-          if(sscanf(argv[2], "%f", &f) < 1) {
+          if(sscanf(argv[2], "%u", &t) < 1) {
             usage();
           }
 
@@ -735,7 +736,7 @@ int main(int argc, char** argv) {
           cont = FALSE;
 
           // Convert to microseconds 
-          flagt = (unsigned)(f * 1000000.0);
+          flagt = t;
           break;
 
         case 'w':
@@ -867,13 +868,13 @@ int main(int argc, char** argv) {
         printf("ptyjig: killing execPID = %d\n", execPID);
 #endif
         // kill the exec too 
-        kill(execPID, SIGKILL);          
+        kill(-execPID, SIGKILL);          
         // use the same method to suicide 
         kill(readerPID, WTERMSIG(status)); 
       }
 
       // Just to make sure it is killed 
-      kill(execPID, SIGKILL); 
+      kill(-execPID, SIGKILL); 
 
       if(pid != writerPID && writerPID != -1) {
 #ifdef DEBUG
