@@ -1,1 +1,7 @@
-TODO: need to add
+In this directory:
+	Makefile
+		Compile fuzz.c and ptyjig.c.
+	fuzz.c
+		A random string generator.
+	ptyjig.c
+		A tool to provide input to utilities that read input from the terminal, it is used to test interactive utilities such as vim and top.
