@@ -12,7 +12,7 @@ import random
 import time
 
 fnull = open(os.devnull, 'w')
-path = "Medium1"
+path = "./Medium1"
 
 start = 0
 inc = 100
@@ -92,7 +92,7 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
-  n = random.randint(0, 1e5)
+  n = random.randint(0, 5000)
   l = 255
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l, "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + inc
@@ -103,7 +103,7 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
-  n = random.randint(0, 1e5)
+  n = random.randint(0, 5000)
   l = 255
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l,  "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + inc
@@ -114,6 +114,6 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
-  n = random.randint(0, 1e5)
+  n = random.randint(0, 5000)
   l = 255
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l, "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)

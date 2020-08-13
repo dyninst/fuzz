@@ -12,7 +12,7 @@ import random
 import time
 
 fnull = open(os.devnull, 'w')
-path = "Large1"
+path = "./Large1"
 
 if not os.path.exists(path):
   os.mkdir(path)

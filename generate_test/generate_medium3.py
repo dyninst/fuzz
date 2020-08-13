@@ -12,7 +12,7 @@ import random
 import time
 
 fnull = open(os.devnull, 'w')
-path = "Medium3"
+path = "./Medium3"
 
 start = 0
 inc = 100

@@ -12,7 +12,7 @@ import random
 import time
 
 fnull = open(os.devnull, 'w')
-path = "Huge3"
+path = "./Huge3"
 
 if not os.path.exists(path):
   os.mkdir(path)
@@ -58,8 +58,8 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(waitTime)
-  l = 100
   n = 1e6
+  l = 100
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l, "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + inc
 
@@ -69,8 +69,8 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(waitTime)
-  l = 100
   n = 1e6
+  l = 100
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l, "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + inc
 
@@ -80,7 +80,7 @@ for i in range(start, start+inc):
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(waitTime)
-  l = 100
   n = 1e6
+  l = 100
   subprocess.call(["fuzz", "%d" % n, "-l", "%d" % l, "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 
