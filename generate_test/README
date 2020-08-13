@@ -1,21 +1,19 @@
 In this directory:
         size and parameters of datasets.xlsx:
-		A xlsx file with the parameters to generate dataset
-
+		A xlsx file with the parameters to generate dataset.
 	generate_small1.py:
-		python script to generate dateset Small1 and Small2
+		python script to generate dateset Small1 and Small2.
 	generate_medium1.py:
-		python script to generate dateset Medium1 and Medium2
+		python script to generate dateset Medium1 and Medium2.
 	generate_large1.py:
-		python script to generate dateset Large1 and Large2
+		python script to generate dateset Large1 and Large2.
 	generate_huge1.py:
-		python script to generate dateset Huge1 and Huge2
-
+		python script to generate dateset Huge1 and Huge2.
 	generate_small3.py:
-		python script to generate dateset Small3
+		python script to generate dateset Small3.
 	generate_medium3.py:
-		python script to generate dateset Medium3
+		python script to generate dateset Medium3.
 	generate_large3.py:
-		python script to generate dateset Large3
+		python script to generate dateset Large3.
 	generate_huge3.py:
-		python script to generate dateset Huge3
+		python script to generate dateset Huge3.

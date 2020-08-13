@@ -150,6 +150,7 @@ def parse_a_line(line):
     if(utility_name == "more" or utility_name == "less"):
         cmd = ptyjig_path \
               + " " + "-d" + " " + "%g" \
+              + " " + "-x" \
               + " " + utility_name \
               + " " + other_options \
               + " " + "/tmp/tmp" \
@@ -157,6 +158,7 @@ def parse_a_line(line):
     else:
         cmd = ptyjig_path \
               + " " + "-d" + " " + "%g" \
+              + " " + "-x" \
               + " " + utility_name \
               + " " + other_options \
               + " < " + new_file_name

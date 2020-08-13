@@ -1,39 +1,13 @@
-TODO: need to modify 
 In this directory:
-	./fuzz/
-		updated fuzz.c and python script to generate test data
-	./pty/
-		updated cross-platform ptyjig and some end of interactive tools
 	./test_Linux/
-		name and option pools of each cmd to be tested on Linux
+		Name and option pools of each cmd to be tested on Linux
 	./test_MacOS/
-		name and option pools of each cmd to be tested on MacOS
+		Name and option pools of each cmd to be tested on MacOS
 	./test_FreeBSD/
-		name and option pools of each cmd to be tested on FreeBSD
-
-	run.py
-		automatically test all utilities listed in a file(see ./test_Linux/ or ./test_MacOS/ or ./test_FreeBSD/)
-		One can edit run.py to specify all the settings
-		The default setting is:
-			test on small test cases
-			timeout after 300 seconds
-			utility names and options pools are from "./test_Linux/run.master_options"
-			test result of each utility will be saved into "./log", each utility corresponds to a result file
-			the script will combine result files into single file named "all"
-
-In this directory:
-	ptyjig_cross_platform.c: 
-		modified ptyjig
-	end/:
-		end of different interactive utilities, such as vim, ftp, csh, htop and so on
-	t1:
-		a small test case
-	test_case_for_vim:
-		a sample test case for vim. To test vim, just run:
-		./pty -d 0.05 vim < test_case_for_vim
-
-		One can generate a test case for other interactive utilities by append end file to t1:
-			cat t1 ./end/end_htop > test_case_for_htop
-			./pty -d 0.05 htop < test_case_for_htop
-		run.py will automatically concatenate the test case and the specific end before testing a utility
+		Name and option pools of each cmd to be tested on FreeBSD
+	./end/
+		The designed string for each interactive utility to be appended to the random input. In this way we can distinguish if the program is waiting for more input after the end of random input from a program that is hung.
 		
+	run.py
+		Automatic script to test all utilities listed in a file(see ./test_Linux/ or ./test_MacOS/ or ./test_FreeBSD/). To see how to use run.py, run:
+			python3 run.py
