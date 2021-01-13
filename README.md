@@ -15,25 +15,25 @@ In this directory:
 
 Makefile
 
-​	To build fuzz.c and ptyjig.c, run:
+​    To build fuzz.c and ptyjig.c, run:
 
-​	```cd ./src && make all```
+​    ```cd ./src && make all```
 
 fuzz.c
 
-​	A random string generator.
+​    A random string generator.
 
-​	For the usage, run:
+​    For the usage, run:
 
-​	```man ./doc/fuzz.man```.
+​    ```man ./doc/fuzz.man```.
 
 ptyjig.c
 
-​	A tool to provide input to utilities that read input from the terminal, it is used to test programs such as vim and bash.
+​    A tool to provide input to utilities that read input from the terminal, it is used to test programs such as vim and bash.
 
-​	For the usage, run:
+​    For the usage, run:
 
-​	```man ./doc/ptyjig.man```.
+​    ```man ./doc/ptyjig.man```.
 
 ##### ./run_test
 
@@ -41,25 +41,25 @@ In this directory:
 
 ./test_Linux/
 
-​	Name and option pools of each cmd to be tested on Linux.
+​    Name and option pools of each cmd to be tested on Linux.
 
 ./test_MacOS/
 
-​	Name and option pools of each cmd to be tested on MacOS.
+​    Name and option pools of each cmd to be tested on MacOS.
 
 ./test_FreeBSD/
 
-​	Name and option pools of each cmd to be tested on FreeBSD.
+​    Name and option pools of each cmd to be tested on FreeBSD.
 
 ./end/ 
 
-​	for each program tested with ptyjig, we specify a string to append to the random input to attempt to terminate the utility. For example, when testing vim, we append the sequence “ESC :q !”. In this way we can distinguish if the program is waiting for more input after the end of random input from a program that is hung.
+​    for each program tested with ptyjig, we specify a string to append to the random input to attempt to terminate the utility. For example, when testing vim, we append the sequence “ESC :q !”. In this way we can distinguish if the program is waiting for more input after the end of random input from a program that is hung.
 
 run.py
 
-​	Automatic script to test all utilities listed in a configuration file(see ./test_Linux/ or ./test_MacOS/ or ./test_FreeBSD/). 
+​    Automatic script to test all utilities listed in a configuration file(see ./test_Linux/ or ./test_MacOS/ or ./test_FreeBSD/). 
 
-​	For the usage, run:
+​    For the usage, run:
 
 ​    ```man ./doc/run.py.1```.
 
