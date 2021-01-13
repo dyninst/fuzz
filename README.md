@@ -9,7 +9,7 @@ on FreeBSD, and 12 out of 76 utilities on MacOS. We found that the failure rates
 
 In this study, we updated the source code used in the [original fuzzing study](https://dl.acm.org/doi/abs/10.1145/96267.96279). Now it applies to Linux, OS X and FreeBSD.
 
-##### ./src
+#### ./src
 
 In this directory:
 
@@ -35,7 +35,7 @@ ptyjig.c
 
 ​&emsp;```man ./doc/ptyjig.man```.
 
-##### ./run_test
+#### ./run_test
 
 In this directory:
 
@@ -63,11 +63,11 @@ run.py
 
 ​&emsp;```man ./doc/run.py.1```.
 
-##### ./generate_test
+#### ./generate_test
 
 Python scripts to generate random files.
 
-##### ./doc
+#### ./doc
 
 Man pages for the above files.
 
