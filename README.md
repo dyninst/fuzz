@@ -1,15 +1,15 @@
-#The Relevance of Classic Fuzz Testing: Have We Solved This One?
+# The Relevance of Classic Fuzz Testing: Have We Solved This One?
 
-###Description
+### Description
 
 This work is a revisit to Prof. Miller's previous fuzzing works, i.e., [1990](https://dl.acm.org/doi/abs/10.1145/96267.96279), [1995](https://minds.wisconsin.edu/bitstream/handle/1793/59964/TR1268.pdf) and [2006](https://dl.acm.org/doi/abs/10.1145/1145735.1145743). We applied original fuzzing techniques to command-line utilities on multiple platforms and found that 9 crash or hang out of 74 utilities on Linux, 15 out of 78 utilities
 on FreeBSD, and 12 out of 76 utilities on MacOS. We found that the failure rates of command-line utilities are higher than those in previous studies. We also provided detailed bug analysis, including when a bug was introduced and when it was solved. Some of the errors that we found have been present in the codebase for many years. Plus, we fuzzed core utilities implemented in Rust.
 
-###Code
+### Code
 
 In this study, we updated the source code used in the [original fuzzing study](https://dl.acm.org/doi/abs/10.1145/96267.96279). Now it applies to Linux, OS X and FreeBSD.
 
-#####./src
+##### ./src
 
 In this directory:
 
@@ -35,7 +35,7 @@ ptyjig.c
 
 ​	```man ./doc/ptyjig.man```.
 
-#####./run_test
+##### ./run_test
 
 In this directory:
 
@@ -63,11 +63,11 @@ run.py
 
 ​    ```man ./doc/run.py.1```.
 
-#####./generate_test
+##### ./generate_test
 
 Python scripts to generate random files.
 
-#####./doc
+##### ./doc
 
 Man pages for the above files.
 
